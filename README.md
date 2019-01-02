@@ -24,7 +24,7 @@ $ composer predis/predis
 
 ``` php
 use Anper\RedisCollector\Adapter\Predis\PredisAdapter;
-use Anper\RedisCollector;
+use Anper\RedisCollector\RedisCollector;
 use Predis\Client;
 
 $client = new Client(...);
