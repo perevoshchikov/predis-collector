@@ -7,6 +7,8 @@
 
 Redis collector for [PHP Debugbar](https://github.com/maximebf/php-debugbar). Supports [predis/predis](https://github.com/nrk/predis).
 
+![Screenshot](https://raw.githubusercontent.com/perevoshchikov/redis-collector/master/screenshot.png)
+
 ## Install
 
 ``` bash
