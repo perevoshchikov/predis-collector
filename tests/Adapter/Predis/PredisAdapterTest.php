@@ -5,6 +5,7 @@ namespace Anper\RedisCollector\Tests\Adapter\Predis;
 use Anper\RedisCollector\Adapter\Predis\Connection\AggregateConnection;
 use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
 use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
+use Anper\RedisCollector\Adapter\Predis\Exception\InvalidConnectionException;
 use Anper\RedisCollector\Adapter\Predis\PredisAdapter;
 use Anper\RedisCollector\RedisCollector;
 use PHPUnit\Framework\TestCase;
@@ -78,6 +79,22 @@ class PredisAdapterTest extends TestCase
             AggregateConnectionInterface::class,
             AggregateConnection::class
         );
+    }
+
+    public function testInvalidConnection()
+    {
+        $this->expectException(InvalidConnectionException::class);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $client = new Client($connection);
+
+        $setter = \Closure::bind(function ($client, $connection) {
+            $client->connection = $connection;
+        }, null, $client);
+
+        $setter($client, null);
+
+        $this->adapter->addClient($client);
     }
 
     protected function assertWrappedConnection(string $connection, string $wrapped)
