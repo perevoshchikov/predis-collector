@@ -5,6 +5,7 @@ namespace Anper\RedisCollector\Adapter\Predis;
 use Anper\RedisCollector\Adapter\Predis\Connection\AggregateConnection;
 use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
 use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
+use Anper\RedisCollector\Adapter\Predis\Exception\InvalidConnectionException;
 use Anper\RedisCollector\ConnectionInterface;
 use Anper\RedisCollector\Format\FormatterInterface;
 use Anper\RedisCollector\RedisCollector;
@@ -100,7 +101,17 @@ class PredisAdapter
             return $client->connection;
         }, null, $client);
 
-        return $getter($client);
+        $connection = $getter($client);
+
+        if ($connection instanceof PredisConnection) {
+            return $connection;
+        }
+
+        throw new InvalidConnectionException(sprintf(
+            'Expected client connection instance of "%s", given "%s"',
+            PredisConnection::class,
+            \is_object($connection) ? \get_class($connection) : \gettype($connection)
+        ));
     }
 
     /**

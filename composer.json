@@ -3,7 +3,6 @@
     "type": "library",
     "description": "Redis collector for PHP debugbar.",
     "keywords": [
-        "anper",
         "redis",
         "collector",
         "debugbar"
