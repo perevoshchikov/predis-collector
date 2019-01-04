@@ -44,10 +44,6 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     {
         if ($connection !== null) {
             $this->addConnection($connection);
-
-            if ($connection instanceof ResponseFormatterInterface) {
-                $this->addResponseFormatter($connection);
-            }
         }
 
         $this->name = $name;

@@ -2,19 +2,17 @@
 
 namespace Anper\RedisCollector\Adapter\Predis\Connection;
 
-use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use Anper\RedisCollector\Profile;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Response\ErrorInterface;
-use Predis\Response\Status;
 use Anper\RedisCollector\ConnectionInterface as CollectorConnectionInterface;
 
 /**
  * Class Adapter
  * @package Anper\RedisCollector\Adapter\Predis
  */
-class Connection implements ConnectionInterface, ResponseFormatterInterface, CollectorConnectionInterface
+class Connection implements ConnectionInterface, CollectorConnectionInterface
 {
     /**
      * @var Profile[]
@@ -126,22 +124,6 @@ class Connection implements ConnectionInterface, ResponseFormatterInterface, Col
     public function __call($name, $args)
     {
         return \call_user_func_array([$this->connection, $name], $args);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function supports($response): bool
-    {
-        return \is_object($response) && $response instanceof Status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function format($response): string
-    {
-        return (string) $response;
     }
 
     /**
