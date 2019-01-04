@@ -188,7 +188,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
         return [
             $this->name => [
                 'icon' => 'align-justify',
-                'widget' => 'PhpDebugBar.Widgets.RedisQueriesWidget',
+                'widget' => 'PhpDebugBar.Widgets.RedisCommandsWidget',
                 'map' => $this->name,
                 'default' => '[]'
             ],

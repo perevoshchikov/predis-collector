@@ -3,12 +3,12 @@
     var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
 
     /**
-     * Widget for the displaying redis queries
+     * Widget for the displaying redis commands
      *
      * Options:
      *  - data
      */
-    var RedisQueriesWidget = PhpDebugBar.Widgets.RedisQueriesWidget = PhpDebugBar.Widget.extend({
+    var RedisCommandsWidget = PhpDebugBar.Widgets.RedisCommandsWidget = PhpDebugBar.Widget.extend({
 
         className: csscls('redis'),
 
@@ -98,7 +98,7 @@
                 }
 
                 var t = $('<span />')
-                    .text(data.nb_profiles + " queries were executed")
+                    .text(data.nb_profiles + " commands were executed")
                     .appendTo(this.$status);
 
                 if (failed) {
