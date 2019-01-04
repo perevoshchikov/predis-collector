@@ -4,7 +4,7 @@ namespace Anper\RedisCollector\Format\Response;
 
 use Anper\RedisCollector\Format\ResponseFormatterInterface;
 
-class DefaultResponseFormatter implements ResponseFormatterInterface
+class DefaultFormatter implements ResponseFormatterInterface
 {
     /**
      * @inheritDoc

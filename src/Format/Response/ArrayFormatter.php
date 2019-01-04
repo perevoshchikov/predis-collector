@@ -5,10 +5,10 @@ namespace Anper\RedisCollector\Format\Response;
 use Anper\RedisCollector\Format\ResponseFormatterInterface;
 
 /**
- * Class ArrayResponseFormatter
+ * Class ArrayFormatter
  * @package Anper\RedisCollector\Format
  */
-class ArrayResponseFormatter implements ResponseFormatterInterface
+class ArrayFormatter implements ResponseFormatterInterface
 {
     /**
      * @var int

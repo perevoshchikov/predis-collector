@@ -3,10 +3,12 @@
 namespace Anper\RedisCollector\Tests;
 
 use Anper\RedisCollector\ConnectionInterface;
-use Anper\RedisCollector\Format\Response\DefaultResponseFormatter;
+use Anper\RedisCollector\Format\CommandFormatterInterface;
 use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use Anper\RedisCollector\RedisCollector;
 use Anper\RedisCollector\Profile;
+use Anper\RedisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
+use Anper\RedisCollector\Format\Command\DefaultFormatter as CommandFormatter;
 
 /**
  * Class RedisCollectorTest
@@ -80,6 +82,18 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
         $this->assertContains([$mock2, 2], $this->collector->getResponseFormatters());
     }
 
+    public function testAddCommandFormatter()
+    {
+        $mock1 = $this->createMock(CommandFormatterInterface::class);
+        $mock2 = $this->createMock(CommandFormatterInterface::class);
+
+        $this->collector->addCommandFormatter($mock1, 1);
+        $this->collector->addCommandFormatter($mock2, 2);
+
+        $this->assertContains([$mock1, 1], $this->collector->getCommandFormatters());
+        $this->assertContains([$mock2, 2], $this->collector->getCommandFormatters());
+    }
+
     public function testGetName()
     {
         $this->assertEquals('redis', $this->collector->getName());
@@ -108,9 +122,10 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
         $this->assertContains([$mock, 10], $collector->getResponseFormatters());
     }
 
-    public function testHasDefaultFormatter()
+    public function testHasDefaultFormatters()
     {
-        $this->assertContains([new DefaultResponseFormatter(), 0], $this->collector->getResponseFormatters());
+        $this->assertContains([new ResponseFormatter(), 0], $this->collector->getResponseFormatters());
+        $this->assertContains([new CommandFormatter(), 0], $this->collector->getCommandFormatters());
     }
 
     public function testCollect()

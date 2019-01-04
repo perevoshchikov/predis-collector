@@ -2,19 +2,19 @@
 
 namespace Anper\RedisCollector\Tests\Format;
 
-use Anper\RedisCollector\Format\Response\DefaultResponseFormatter;
+use Anper\RedisCollector\Format\Response\DefaultFormatter;
 use PHPUnit\Framework\TestCase;
 
 class DefaultFormatterTest extends TestCase
 {
     /**
-     * @var DefaultResponseFormatter
+     * @var DefaultFormatter
      */
     protected $formatter;
 
     protected function setUp()
     {
-        $this->formatter = new DefaultResponseFormatter();
+        $this->formatter = new DefaultFormatter();
     }
 
     protected function tearDown()

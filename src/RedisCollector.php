@@ -2,7 +2,9 @@
 
 namespace Anper\RedisCollector;
 
-use Anper\RedisCollector\Format\Response\DefaultResponseFormatter;
+use Anper\RedisCollector\Format\CommandFormatterInterface;
+use Anper\RedisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
+use Anper\RedisCollector\Format\Command\DefaultFormatter as CommandFormatter;
 use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
@@ -25,6 +27,11 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     protected $responseFormatters = [];
 
     /**
+     * @var array
+     */
+    protected $commandFormatters = [];
+
+    /**
      * @var string
      */
     protected $name;
@@ -45,7 +52,8 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
 
         $this->name = $name;
 
-        $this->addResponseFormatter(new DefaultResponseFormatter(), 0);
+        $this->addResponseFormatter(new ResponseFormatter(), 0);
+        $this->addCommandFormatter(new CommandFormatter(), 0);
     }
 
     /**
@@ -92,6 +100,28 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     }
 
     /**
+     * @param CommandFormatterInterface $formatter
+     * @param int $priority
+     * @return RedisCollector
+     */
+    public function addCommandFormatter(CommandFormatterInterface $formatter, int $priority = 10): self
+    {
+        $id = spl_object_id($formatter);
+
+        $this->commandFormatters[$id] = [$formatter, $priority];
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCommandFormatters(): array
+    {
+        return $this->commandFormatters;
+    }
+
+    /**
      * @inheritdoc
      */
     public function collect()
@@ -103,7 +133,8 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
             'profiles' => []
         ];
 
-        $this->sortResponseFormatters();
+        $this->sortFormatters($this->responseFormatters);
+        $this->sortFormatters($this->commandFormatters);
 
         foreach ($this->connections as $connection) {
             $profiles = $this->collectProfiles($connection);
@@ -192,12 +223,21 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     }
 
     /**
-     * @param Profile $statement
+     * @param Profile $profile
      * @return string
      */
-    protected function formatCommand(Profile $statement): string
+    protected function formatCommand(Profile $profile): string
     {
-        return $statement->getMethod() . ' ' . implode(' ', $statement->getArguments());
+        foreach ($this->commandFormatters as $item) {
+            /** @var CommandFormatterInterface $formatter */
+            $formatter = $item[0];
+
+            if ($formatter->supports($profile)) {
+                return $formatter->format($profile);
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -218,9 +258,12 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
         return '';
     }
 
-    protected function sortResponseFormatters(): void
+    /**
+     * @param array $formatters
+     */
+    protected function sortFormatters(array &$formatters): void
     {
-        usort($this->responseFormatters, function (array $a, array $b) {
+        usort($formatters, function (array $a, array $b) {
             return $b[1] <=> $a[1];
         });
     }
