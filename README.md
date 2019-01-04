@@ -37,6 +37,25 @@ $adapter->addClient($client);
 $debugbar->addCollector($collector);
 ```
 
+## Formatters
+```php
+// response formatters
+
+use Anper\RedisCollector\Format\Respose\ArrayFormatter;
+use Anper\RedisCollector\Format\Respose\StringFormatter;
+
+$collector->addResponseFormatter(new ArrayFormatter());
+$collector->addResponseFormatter(new StringFormatter());
+
+
+// command formatters
+
+use Acme\CommandFormatter;
+
+$collector->addCommandFormatter(new CommandFormatter());
+
+```
+
 ## Test
 
 ``` bash
