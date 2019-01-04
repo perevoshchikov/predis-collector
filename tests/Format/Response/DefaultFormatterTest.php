@@ -1,6 +1,6 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Format;
+namespace Anper\RedisCollector\Tests\Format\Response;
 
 use Anper\RedisCollector\Format\Response\DefaultFormatter;
 use PHPUnit\Framework\TestCase;

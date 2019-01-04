@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Response\Error;
-use Predis\Response\Status;
 
 class ConnectionTest extends TestCase
 {
@@ -91,17 +90,6 @@ class ConnectionTest extends TestCase
         $this->connection->addProfile($profile);
 
         $this->assertContains($profile, $this->connection->getProfiles());
-    }
-
-    public function testSupports()
-    {
-        $this->assertFalse($this->connection->supports(1));
-        $this->assertTrue($this->connection->supports(new Status('OK')));
-    }
-
-    public function testFormat()
-    {
-        $this->assertEquals('OK', $this->connection->format(new Status('OK')));
     }
 
     public function testValidProfile()

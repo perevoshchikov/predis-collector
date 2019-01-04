@@ -112,16 +112,6 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
         $this->assertContains($mock, $collector->getConnections());
     }
 
-    public function testAddFormatterFromConstruct()
-    {
-        $mock = $this->createMock([ConnectionInterface::class, ResponseFormatterInterface::class]);
-
-        $collector = new RedisCollector($mock);
-
-        $this->assertContains($mock, $collector->getConnections());
-        $this->assertContains([$mock, 10], $collector->getResponseFormatters());
-    }
-
     public function testHasDefaultFormatters()
     {
         $this->assertContains([new ResponseFormatter(), 0], $this->collector->getResponseFormatters());

@@ -57,8 +57,12 @@ class PredisAdapterTest extends TestCase
     {
         $connection = $this->createMock(ConnectionInterface::class);
 
+        $this->assertCount(1, $this->collector->getResponseFormatters());
+
         /** @var Connection $wrapped */
         $wrapped = $this->adapter->addConnection($connection);
+
+        $this->assertCount(2, $this->collector->getResponseFormatters());
 
         $this->assertInstanceOf(Connection::class, $wrapped);
         $this->assertContains($wrapped, $this->collector->getConnections());
