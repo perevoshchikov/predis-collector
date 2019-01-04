@@ -137,21 +137,12 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
             ->method('getConnectionId')
             ->will($this->returnValue('connectionMock'));
 
-        $formatter = $this->createMock(ResponseFormatterInterface::class);
-        $formatter->expects($this->any())
-            ->method('supports')
-            ->will($this->returnValue(true));
-        $formatter->expects($this->any())
-            ->method('format')
-            ->will($this->returnArgument(0));
-
         $profile->start($startTime, $startMemory);
         $profile->end($stopTime, $stopMemory);
         $profile->setError('ERROR');
         $profile->setResponse($response);
 
         $this->collector->addConnection($connection);
-        $this->collector->addResponseFormatter($formatter);
 
         $result = $this->collector->collect();
 
@@ -161,8 +152,8 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
             'memory' => $profile->getMemoryUsage(),
             'profiles' => [
                 [
-                    'prepared_profile' => 'SET key value',
-                    'prepared_response' => $formatter->format($response),
+                    'prepared_profile' => (new CommandFormatter())->format($profile),
+                    'prepared_response' => (new ResponseFormatter())->format($response),
                     'duration' => $profile->getDuration(),
                     'duration_str' => $this->collector
                         ->getDataFormatter()

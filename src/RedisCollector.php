@@ -169,7 +169,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
                     'duration' => $profile->getDuration(),
                     'duration_str' => $this->getDataFormatter()->formatDuration($profile->getDuration()),
                     'memory' => $profile->getMemoryUsage(),
-                    'memory_str' => $this->getDataFormatter()->formatBytes((string) $profile->getMemoryUsage()),
+                    'memory_str' => $this->getDataFormatter()->formatBytes($profile->getMemoryUsage()),
                     'is_success' => $profile->isSuccess(),
                     'error_message' => (string) $profile->getError(),
                     'connection_id' => $connection->getConnectionId(),
