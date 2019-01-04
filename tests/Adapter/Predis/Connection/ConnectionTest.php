@@ -136,6 +136,33 @@ class ConnectionTest extends TestCase
         $this->assertEquals('EXCEPTION', $profile->getError());
     }
 
+    public function testMagicMethods()
+    {
+        $mock = $this->createMock(ConnectionMock::class);
+        $mock->expects($this->once())
+            ->method('__set')
+            ->with('foo', 'bar');
+
+        $mock->expects($this->once())
+            ->method('__get')
+            ->with('foo');
+
+        $mock->expects($this->once())
+            ->method('__call')
+            ->with('foo', ['bar']);
+
+        $mock->expects($this->once())
+            ->method('__toString')
+            ->willReturn('id');
+
+        $connection = new Connection($mock);
+
+        $connection->foo = 'bar';
+        $connection->foo;
+        $connection->foo('bar');
+        $this->assertEquals('id', $connection->getConnectionId());
+    }
+
     protected function getProfile($response, \Exception $exception = null)
     {
         $command = $this->createMock(CommandInterface::class);
