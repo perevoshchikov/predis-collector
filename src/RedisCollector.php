@@ -169,7 +169,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
                     'duration' => $profile->getDuration(),
                     'duration_str' => $this->getDataFormatter()->formatDuration($profile->getDuration()),
                     'memory' => $profile->getMemoryUsage(),
-                    'memory_str' => $this->getDataFormatter()->formatBytes($profile->getMemoryUsage()),
+                    'memory_str' => $this->getDataFormatter()->formatBytes((string) $profile->getMemoryUsage()),
                     'is_success' => $profile->isSuccess(),
                     'error_message' => (string) $profile->getError(),
                     'connection_id' => $connection->getConnectionId(),
@@ -189,11 +189,11 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
             $this->name => [
                 'icon' => 'align-justify',
                 'widget' => 'PhpDebugBar.Widgets.RedisQueriesWidget',
-                'map' => 'redis',
+                'map' => $this->name,
                 'default' => '[]'
             ],
             $this->name.':badge' => [
-                'map' => 'redis.nb_profiles',
+                'map' => $this->name . '.nb_profiles',
                 'default' => 'null'
             ]
         ];
