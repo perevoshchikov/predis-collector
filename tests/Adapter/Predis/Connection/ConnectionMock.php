@@ -60,7 +60,7 @@ class ConnectionMock implements ConnectionInterface
      */
     public function __get($name)
     {
-       return $name;
+        return $name;
     }
 
     /**

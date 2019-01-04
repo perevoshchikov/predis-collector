@@ -28,7 +28,7 @@ class ProfileTest extends TestCase
         $stopMemory  = 4691048;
 
         $this->profile->start(0, $startMemory);
-        $this->profile->end( 0, $stopMemory);
+        $this->profile->end(0, $stopMemory);
 
         $this->assertEquals($startMemory, $this->profile->getStartMemory());
         $this->assertEquals($stopMemory, $this->profile->getEndMemory());
