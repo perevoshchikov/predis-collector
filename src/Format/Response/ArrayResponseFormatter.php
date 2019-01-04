@@ -1,12 +1,14 @@
 <?php
 
-namespace Anper\RedisCollector\Format;
+namespace Anper\RedisCollector\Format\Response;
+
+use Anper\RedisCollector\Format\ResponseFormatterInterface;
 
 /**
- * Class StringFormatter
+ * Class ArrayResponseFormatter
  * @package Anper\RedisCollector\Format
  */
-class StringFormatter implements FormatterInterface
+class ArrayResponseFormatter implements ResponseFormatterInterface
 {
     /**
      * @var int
@@ -33,7 +35,7 @@ class StringFormatter implements FormatterInterface
      */
     public function supports($response): bool
     {
-        return \is_string($response);
+        return \is_array($response);
     }
 
     /**
@@ -41,16 +43,18 @@ class StringFormatter implements FormatterInterface
      */
     public function format($response): string
     {
-        $length = \strlen($response);
+        $result = (string) \json_encode($response);
+
+        $length = \strlen($result);
 
         if ($length > $this->maxLength) {
-            $response = substr($response, 0, $this->maxLength) . '...';
+            $result = substr($result, 0, $this->maxLength) . '...' . $result[$length - 1];
         }
 
         if ($this->typeHint) {
-            $response = 'string(' . $length . ') ' . $response;
+            $result = 'array(' . \count($response). ') ' . $result;
         }
 
-        return $response;
+        return $result;
     }
 }

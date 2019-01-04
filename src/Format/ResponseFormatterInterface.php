@@ -2,7 +2,7 @@
 
 namespace Anper\RedisCollector\Format;
 
-interface FormatterInterface
+interface ResponseFormatterInterface
 {
     /**
      * @param mixed $response

@@ -2,7 +2,7 @@
 
 namespace Anper\RedisCollector\Adapter\Predis\Connection;
 
-use Anper\RedisCollector\Format\FormatterInterface;
+use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use Anper\RedisCollector\Profile;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
@@ -14,7 +14,7 @@ use Anper\RedisCollector\ConnectionInterface as CollectorConnectionInterface;
  * Class Adapter
  * @package Anper\RedisCollector\Adapter\Predis
  */
-class Connection implements ConnectionInterface, FormatterInterface, CollectorConnectionInterface
+class Connection implements ConnectionInterface, ResponseFormatterInterface, CollectorConnectionInterface
 {
     /**
      * @var Profile[]

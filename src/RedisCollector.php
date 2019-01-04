@@ -2,8 +2,8 @@
 
 namespace Anper\RedisCollector;
 
-use Anper\RedisCollector\Format\DefaultFormatter;
-use Anper\RedisCollector\Format\FormatterInterface;
+use Anper\RedisCollector\Format\Response\DefaultResponseFormatter;
+use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
@@ -38,14 +38,14 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
         if ($connection !== null) {
             $this->addConnection($connection);
 
-            if ($connection instanceof FormatterInterface) {
+            if ($connection instanceof ResponseFormatterInterface) {
                 $this->addResponseFormatter($connection);
             }
         }
 
         $this->name = $name;
 
-        $this->addResponseFormatter(new DefaultFormatter(), 0);
+        $this->addResponseFormatter(new DefaultResponseFormatter(), 0);
     }
 
     /**
@@ -70,11 +70,11 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     }
 
     /**
-     * @param FormatterInterface $formatter
+     * @param ResponseFormatterInterface $formatter
      * @param int $priority
      * @return RedisCollector
      */
-    public function addResponseFormatter(FormatterInterface $formatter, int $priority = 10): self
+    public function addResponseFormatter(ResponseFormatterInterface $formatter, int $priority = 10): self
     {
         $id = spl_object_id($formatter);
 
@@ -207,7 +207,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     protected function formatResponse($response): string
     {
         foreach ($this->responseFormatters as $item) {
-            /** @var FormatterInterface $formatter */
+            /** @var ResponseFormatterInterface $formatter */
             $formatter = $item[0];
 
             if ($formatter->supports($response)) {

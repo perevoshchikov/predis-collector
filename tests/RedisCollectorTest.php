@@ -3,8 +3,8 @@
 namespace Anper\RedisCollector\Tests;
 
 use Anper\RedisCollector\ConnectionInterface;
-use Anper\RedisCollector\Format\DefaultFormatter;
-use Anper\RedisCollector\Format\FormatterInterface;
+use Anper\RedisCollector\Format\Response\DefaultResponseFormatter;
+use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use Anper\RedisCollector\RedisCollector;
 use Anper\RedisCollector\Profile;
 
@@ -70,8 +70,8 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testAddResponseFormatter()
     {
-        $mock1 = $this->createMock(FormatterInterface::class);
-        $mock2 = $this->createMock(FormatterInterface::class);
+        $mock1 = $this->createMock(ResponseFormatterInterface::class);
+        $mock2 = $this->createMock(ResponseFormatterInterface::class);
 
         $this->collector->addResponseFormatter($mock1, 1);
         $this->collector->addResponseFormatter($mock2, 2);
@@ -100,7 +100,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testAddFormatterFromConstruct()
     {
-        $mock = $this->createMock([ConnectionInterface::class, FormatterInterface::class]);
+        $mock = $this->createMock([ConnectionInterface::class, ResponseFormatterInterface::class]);
 
         $collector = new RedisCollector($mock);
 
@@ -110,7 +110,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testHasDefaultFormatter()
     {
-        $this->assertContains([new DefaultFormatter(), 0], $this->collector->getResponseFormatters());
+        $this->assertContains([new DefaultResponseFormatter(), 0], $this->collector->getResponseFormatters());
     }
 
     public function testCollect()
@@ -132,7 +132,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
             ->method('getConnectionId')
             ->will($this->returnValue('connectionMock'));
 
-        $formatter = $this->createMock(FormatterInterface::class);
+        $formatter = $this->createMock(ResponseFormatterInterface::class);
         $formatter->expects($this->any())
             ->method('supports')
             ->will($this->returnValue(true));

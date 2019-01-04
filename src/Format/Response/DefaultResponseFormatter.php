@@ -1,8 +1,10 @@
 <?php
 
-namespace Anper\RedisCollector\Format;
+namespace Anper\RedisCollector\Format\Response;
 
-class DefaultFormatter implements FormatterInterface
+use Anper\RedisCollector\Format\ResponseFormatterInterface;
+
+class DefaultResponseFormatter implements ResponseFormatterInterface
 {
     /**
      * @inheritDoc

@@ -7,7 +7,7 @@ use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
 use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
 use Anper\RedisCollector\Adapter\Predis\Exception\InvalidConnectionException;
 use Anper\RedisCollector\ConnectionInterface;
-use Anper\RedisCollector\Format\FormatterInterface;
+use Anper\RedisCollector\Format\ResponseFormatterInterface;
 use Anper\RedisCollector\RedisCollector;
 use Predis\Client;
 use Predis\Connection\AggregateConnectionInterface;
@@ -52,7 +52,7 @@ class PredisAdapter
 
         $this->collector->addConnection($wrapped);
 
-        if ($wrapped instanceof FormatterInterface) {
+        if ($wrapped instanceof ResponseFormatterInterface) {
             $this->collector->addResponseFormatter($wrapped);
         }
 
