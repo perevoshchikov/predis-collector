@@ -19,7 +19,7 @@
 
             this.$list = new PhpDebugBar.Widgets.ListWidget({ itemRenderer: function(li, stmt) {
                 $('<code />')
-                    .html(PhpDebugBar.Widgets.highlight(stmt.prepared_profile, 'sql'))
+                    .html(stmt.prepared_profile)
                     .appendTo(li);
 
                 if (stmt.duration_str) {
