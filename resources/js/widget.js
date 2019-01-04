@@ -71,7 +71,7 @@
 
                 // Search for duplicate and failed profiles.
                 for (var map = {}, unique = 0, duplicate = 0, failed = 0, i = 0; i < data.profiles.length; i++) {
-                    var stmt = data.profiles[i].prepared_stmt;
+                    var stmt = data.profiles[i].prepared_profile;
                     map[stmt] = map[stmt] || { keys: [] };
                     map[stmt].keys.push(i);
 
