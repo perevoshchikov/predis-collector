@@ -97,23 +97,23 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     public function collect()
     {
         $data = [
-            'nb_statements' => 0,
+            'nb_profiles' => 0,
             'duration' => 0,
             'memory' => 0,
-            'statements' => []
+            'profiles' => []
         ];
 
         $this->sortResponseFormatters();
 
         foreach ($this->connections as $connection) {
-            $statements = $this->collectStatements($connection);
+            $profiles = $this->collectProfiles($connection);
 
-            $data['nb_statements'] += \count($statements);
+            $data['nb_profiles'] += \count($profiles);
 
-            foreach ($statements as $statement) {
-                $data['duration'] += $statement['duration'];
-                $data['memory'] += $statement['memory'];
-                $data['statements'][] = $statement;
+            foreach ($profiles as $profile) {
+                $data['duration']  += $profile['duration'];
+                $data['memory']    += $profile['memory'];
+                $data['profiles'][] = $profile;
             }
         }
 
@@ -130,27 +130,27 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
      * @param ConnectionInterface $connection
      * @return array
      */
-    protected function collectStatements(ConnectionInterface $connection): array
+    protected function collectProfiles(ConnectionInterface $connection): array
     {
-        $stmts = [];
+        $profiles = [];
 
-        foreach ($connection->getExecutedStatements() as $stmt) {
-            if ($stmt instanceof Statement) {
-                $stmts[] = [
-                    'prepared_stmt' => $this->formatCommand($stmt),
-                    'prepared_response' => $this->formatResponse($stmt->getResponse()),
-                    'duration' => $stmt->getDuration(),
-                    'duration_str' => $this->getDataFormatter()->formatDuration($stmt->getDuration()),
-                    'memory' => $stmt->getMemoryUsage(),
-                    'memory_str' => $this->getDataFormatter()->formatBytes($stmt->getMemoryUsage()),
-                    'is_success' => $stmt->isSuccess(),
-                    'error_message' => $stmt->getErrorMessage(),
+        foreach ($connection->getProfiles() as $profile) {
+            if ($profile instanceof Profile) {
+                $profiles[] = [
+                    'prepared_profile' => $this->formatCommand($profile),
+                    'prepared_response' => $this->formatResponse($profile->getResponse()),
+                    'duration' => $profile->getDuration(),
+                    'duration_str' => $this->getDataFormatter()->formatDuration($profile->getDuration()),
+                    'memory' => $profile->getMemoryUsage(),
+                    'memory_str' => $this->getDataFormatter()->formatBytes($profile->getMemoryUsage()),
+                    'is_success' => $profile->isSuccess(),
+                    'error_message' => $profile->getErrorMessage(),
                     'connection_id' => $connection->getConnectionId(),
                 ];
             }
         }
 
-        return $stmts;
+        return $profiles;
     }
 
     /**
@@ -166,7 +166,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
                 'default' => '[]'
             ],
             $this->name.':badge' => [
-                'map' => 'redis.nb_statements',
+                'map' => 'redis.nb_profiles',
                 'default' => 'null'
             ]
         ];
@@ -192,10 +192,10 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     }
 
     /**
-     * @param Statement $statement
+     * @param Profile $statement
      * @return string
      */
-    protected function formatCommand(Statement $statement): string
+    protected function formatCommand(Profile $statement): string
     {
         return $statement->getMethod() . ' ' . implode(' ', $statement->getArguments());
     }

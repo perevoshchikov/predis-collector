@@ -9,9 +9,9 @@ namespace Anper\RedisCollector;
 interface ConnectionInterface
 {
     /**
-     * @return Statement[]
+     * @return Profile[]
      */
-    public function getExecutedStatements(): array;
+    public function getProfiles(): array;
 
     /**
      * @return string

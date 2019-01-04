@@ -19,7 +19,7 @@
 
             this.$list = new PhpDebugBar.Widgets.ListWidget({ itemRenderer: function(li, stmt) {
                 $('<code />')
-                    .html(PhpDebugBar.Widgets.highlight(stmt.prepared_stmt, 'sql'))
+                    .html(PhpDebugBar.Widgets.highlight(stmt.prepared_profile, 'sql'))
                     .appendTo(li);
 
                 if (stmt.duration_str) {
@@ -66,21 +66,21 @@
                     return false;
                 }
 
-                this.$list.set('data', data.statements);
+                this.$list.set('data', data.profiles);
                 this.$status.empty();
 
-                // Search for duplicate and failed statements.
-                for (var map = {}, unique = 0, duplicate = 0, failed = 0, i = 0; i < data.statements.length; i++) {
-                    var stmt = data.statements[i].prepared_stmt;
+                // Search for duplicate and failed profiles.
+                for (var map = {}, unique = 0, duplicate = 0, failed = 0, i = 0; i < data.profiles.length; i++) {
+                    var stmt = data.profiles[i].prepared_stmt;
                     map[stmt] = map[stmt] || { keys: [] };
                     map[stmt].keys.push(i);
 
-                    if (data.statements[i].is_success === false) {
+                    if (data.profiles[i].is_success === false) {
                         failed++;
                     }
                 }
 
-                // Add classes to all duplicate statements.
+                // Add classes to all duplicate profiles.
                 for (var stmt in map) {
                     if (map[stmt].keys.length > 1) {
                         duplicate += map[stmt].keys.length;
@@ -98,7 +98,7 @@
                 }
 
                 var t = $('<span />')
-                    .text(data.nb_statements + " statements were executed")
+                    .text(data.nb_profiles + " queries were executed")
                     .appendTo(this.$status);
 
                 if (failed) {

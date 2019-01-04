@@ -6,7 +6,7 @@ use Anper\RedisCollector\ConnectionInterface;
 use Anper\RedisCollector\Format\DefaultFormatter;
 use Anper\RedisCollector\Format\FormatterInterface;
 use Anper\RedisCollector\RedisCollector;
-use Anper\RedisCollector\Statement;
+use Anper\RedisCollector\Profile;
 
 /**
  * Class RedisCollectorTest
@@ -39,7 +39,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
                 'default' => '[]'
             ],
             'redis:badge' => [
-                'map' => 'redis.nb_statements',
+                'map' => 'redis.nb_profiles',
                 'default' => 'null'
             ]
         ], $this->collector->getWidgets());
@@ -115,7 +115,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testCollect()
     {
-        $statement = new Statement('SET', ['key', 'value']);
+        $profile = new Profile('SET', ['key', 'value']);
 
         $startTime   = 0.2133;
         $stopTime    = 0.2163;
@@ -126,8 +126,8 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
         $connection = $this->createMock(ConnectionInterface::class);
         $connection->expects($this->any())
-            ->method('getExecutedStatements')
-            ->will($this->returnValue([$statement]));
+            ->method('getProfiles')
+            ->will($this->returnValue([$profile]));
         $connection->expects($this->any())
             ->method('getConnectionId')
             ->will($this->returnValue('connectionMock'));
@@ -140,9 +140,9 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
             ->method('format')
             ->will($this->returnArgument(0));
 
-        $statement->start($startTime, $startMemory);
-        $statement->end(new \Exception('exception'), $stopTime, $stopMemory);
-        $statement->setResponse($response);
+        $profile->start($startTime, $startMemory);
+        $profile->end(new \Exception('exception'), $stopTime, $stopMemory);
+        $profile->setResponse($response);
 
         $this->collector->addConnection($connection);
         $this->collector->addResponseFormatter($formatter);
@@ -150,32 +150,32 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
         $result = $this->collector->collect();
 
         $expected = [
-            'nb_statements' => 1,
-            'duration' => $statement->getDuration(),
-            'memory' => $statement->getMemoryUsage(),
-            'statements' => [
+            'nb_profiles' => 1,
+            'duration' => $profile->getDuration(),
+            'memory' => $profile->getMemoryUsage(),
+            'profiles' => [
                 [
-                    'prepared_stmt' => 'SET key value',
+                    'prepared_profile' => 'SET key value',
                     'prepared_response' => $formatter->format($response),
-                    'duration' => $statement->getDuration(),
+                    'duration' => $profile->getDuration(),
                     'duration_str' => $this->collector
                         ->getDataFormatter()
-                        ->formatDuration($statement->getDuration()),
-                    'memory' => $statement->getMemoryUsage(),
+                        ->formatDuration($profile->getDuration()),
+                    'memory' => $profile->getMemoryUsage(),
                     'memory_str' => $this->collector
                         ->getDataFormatter()
-                        ->formatBytes($statement->getMemoryUsage()),
-                    'is_success' => $statement->isSuccess(),
-                    'error_message' => $statement->getErrorMessage(),
+                        ->formatBytes($profile->getMemoryUsage()),
+                    'is_success' => $profile->isSuccess(),
+                    'error_message' => $profile->getErrorMessage(),
                     'connection_id' => $connection->getConnectionId(),
                 ]
             ],
             'duration_str' => $this->collector
                 ->getDataFormatter()
-                ->formatDuration($statement->getDuration()),
+                ->formatDuration($profile->getDuration()),
             'memory_str' => $this->collector
                 ->getDataFormatter()
-                ->formatBytes($statement->getMemoryUsage()),
+                ->formatBytes($profile->getMemoryUsage()),
         ];
 
         $this->assertEquals($expected, $result);

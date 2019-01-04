@@ -3,7 +3,7 @@
 namespace Anper\RedisCollector\Tests\Adapter\Predis\Connection;
 
 use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
-use Anper\RedisCollector\Statement;
+use Anper\RedisCollector\Profile;
 use PHPUnit\Framework\TestCase;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
@@ -84,13 +84,13 @@ class ConnectionTest extends TestCase
         $this->assertEquals(1, $connection->readResponse($command));
     }
 
-    public function testAddStatement()
+    public function testAddProfile()
     {
-        $statement = new Statement('SET', ['key', 'value']);
+        $profile = new Profile('SET', ['key', 'value']);
 
-        $this->connection->addExecutedStatement($statement);
+        $this->connection->addProfile($profile);
 
-        $this->assertContains($statement, $this->connection->getExecutedStatements());
+        $this->assertContains($profile, $this->connection->getProfiles());
     }
 
     public function testSupports()
@@ -104,42 +104,42 @@ class ConnectionTest extends TestCase
         $this->assertEquals('OK', $this->connection->format(new Status('OK')));
     }
 
-    public function testValidStatement()
+    public function testValidProfile()
     {
-        $statement = $this->getStatement('OK');
+        $profile = $this->getProfile('OK');
 
-        $this->assertEquals('OK', $statement->getResponse());
-        $this->assertNull($statement->getException());
-        $this->assertEquals('', $statement->getErrorMessage());
-        $this->assertEquals($statement->getMethod(), 'SET');
-        $this->assertEquals($statement->getArguments(), ['key', 'value']);
-        $this->assertTrue($statement->getDuration() > 0);
-        $this->assertTrue($statement->getStartTime() > 0);
-        $this->assertTrue($statement->getEndTime() > 0);
-        $this->assertTrue($statement->getMemoryUsage() > 0);
-        $this->assertTrue($statement->getStartMemory() > 0);
-        $this->assertTrue($statement->getEndMemory() > 0);
+        $this->assertEquals('OK', $profile->getResponse());
+        $this->assertNull($profile->getException());
+        $this->assertEquals('', $profile->getErrorMessage());
+        $this->assertEquals($profile->getMethod(), 'SET');
+        $this->assertEquals($profile->getArguments(), ['key', 'value']);
+        $this->assertTrue($profile->getDuration() > 0);
+        $this->assertTrue($profile->getStartTime() > 0);
+        $this->assertTrue($profile->getEndTime() > 0);
+        $this->assertTrue($profile->getMemoryUsage() > 0);
+        $this->assertTrue($profile->getStartMemory() > 0);
+        $this->assertTrue($profile->getEndMemory() > 0);
     }
 
-    public function testErrorStatement()
+    public function testErrorProfile()
     {
-        $statement = $this->getStatement(new Error('ERROR'));
+        $profile = $this->getProfile(new Error('ERROR'));
 
-        $this->assertEquals('ERROR', $statement->getErrorMessage());
-        $this->assertInstanceOf(\Exception::class, $statement->getException());
+        $this->assertEquals('ERROR', $profile->getErrorMessage());
+        $this->assertInstanceOf(\Exception::class, $profile->getException());
     }
 
-    public function testExceptionStatement()
+    public function testExceptionProfile()
     {
         $this->expectException(\Exception::class);
 
-        $statement = $this->getStatement('OK', new \Exception('EXCEPTION'));
+        $profile = $this->getProfile('OK', new \Exception('EXCEPTION'));
 
-        $this->assertEquals('EXCEPTION', $statement->getErrorMessage());
-        $this->assertInstanceOf(\Exception::class, $statement->getException());
+        $this->assertEquals('EXCEPTION', $profile->getErrorMessage());
+        $this->assertInstanceOf(\Exception::class, $profile->getException());
     }
 
-    protected function getStatement($response, \Exception $exception = null)
+    protected function getProfile($response, \Exception $exception = null)
     {
         $command = $this->createMock(CommandInterface::class);
         $command->expects($this->atLeastOnce())
@@ -163,11 +163,11 @@ class ConnectionTest extends TestCase
         $connection = new Connection($mock);
         $result = $connection->executeCommand($command);
 
-        $statements = $connection->getExecutedStatements();
+        $profiles = $connection->getProfiles();
 
-        $this->assertCount(1, $statements);
+        $this->assertCount(1, $profiles);
         $this->assertEquals($response, $result);
 
-        return $statements[0];
+        return $profiles[0];
     }
 }

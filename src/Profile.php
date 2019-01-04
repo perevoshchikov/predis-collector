@@ -3,10 +3,10 @@
 namespace Anper\RedisCollector;
 
 /**
- * Class Statement
+ * Class Profile
  * @package Anper\RedisCollector
  */
-class Statement
+class Profile
 {
     /**
      * @var int
@@ -175,7 +175,7 @@ class Statement
             if (mb_check_encoding($param, 'UTF-8')) {
                 $params[$name] = (string) $param;
             } else {
-                $param[$name] = '[BINARY DATA]';
+                $params[$name] = '[BINARY DATA]';
             }
         }
 

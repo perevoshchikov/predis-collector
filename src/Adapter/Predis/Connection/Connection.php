@@ -3,7 +3,7 @@
 namespace Anper\RedisCollector\Adapter\Predis\Connection;
 
 use Anper\RedisCollector\Format\FormatterInterface;
-use Anper\RedisCollector\Statement;
+use Anper\RedisCollector\Profile;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Response\ErrorInterface;
@@ -17,9 +17,9 @@ use Anper\RedisCollector\ConnectionInterface as CollectorConnectionInterface;
 class Connection implements ConnectionInterface, FormatterInterface, CollectorConnectionInterface
 {
     /**
-     * @var Statement[]
+     * @var Profile[]
      */
-    protected $executedStatements = [];
+    protected $profiles = [];
 
     /**
      * @var ConnectionInterface
@@ -145,28 +145,28 @@ class Connection implements ConnectionInterface, FormatterInterface, CollectorCo
     }
 
     /**
-     * @return Statement[]
+     * @return Profile[]
      */
-    public function getExecutedStatements(): array
+    public function getProfiles(): array
     {
-        return $this->executedStatements;
+        return $this->profiles;
     }
 
     /**
-     * @param Statement $stmt
+     * @param Profile $profile
      */
-    public function addExecutedStatement(Statement $stmt): void
+    public function addProfile(Profile $profile): void
     {
-        $this->executedStatements[] = $stmt;
+        $this->profiles[] = $profile;
     }
 
     /**
      * @param CommandInterface $command
-     * @return Statement
+     * @return Profile
      */
-    protected function createStatement(CommandInterface $command): Statement
+    protected function createProfile(CommandInterface $command): Profile
     {
-        return new Statement($command->getId(), $command->getArguments());
+        return new Profile($command->getId(), $command->getArguments());
     }
 
     /**
@@ -176,8 +176,8 @@ class Connection implements ConnectionInterface, FormatterInterface, CollectorCo
      */
     protected function profileCall(CommandInterface $command)
     {
-        $trace = $this->createStatement($command);
-        $trace->start();
+        $profile = $this->createProfile($command);
+        $profile->start();
 
         try {
             $result = $this->connection->executeCommand($command);
@@ -186,18 +186,18 @@ class Connection implements ConnectionInterface, FormatterInterface, CollectorCo
         }
 
         if (\is_object($result) && $result instanceof ErrorInterface) {
-            $trace->end(new \Exception($result->getMessage()));
+            $profile->end(new \Exception($result->getMessage()));
         } else {
-            $trace->end($e ?? null);
+            $profile->end($e ?? null);
         }
 
-        $this->addExecutedStatement($trace);
+        $this->addProfile($profile);
 
         if (isset($e)) {
             throw $e;
         }
 
-        $trace->setResponse($result);
+        $profile->setResponse($result);
 
         return $result;
     }
