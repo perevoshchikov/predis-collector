@@ -141,7 +141,8 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnArgument(0));
 
         $profile->start($startTime, $startMemory);
-        $profile->end(new \Exception('exception'), $stopTime, $stopMemory);
+        $profile->end($stopTime, $stopMemory);
+        $profile->setError('ERROR');
         $profile->setResponse($response);
 
         $this->collector->addConnection($connection);
@@ -166,7 +167,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
                         ->getDataFormatter()
                         ->formatBytes($profile->getMemoryUsage()),
                     'is_success' => $profile->isSuccess(),
-                    'error_message' => $profile->getErrorMessage(),
+                    'error_message' => $profile->getError(),
                     'connection_id' => $connection->getConnectionId(),
                 ]
             ],

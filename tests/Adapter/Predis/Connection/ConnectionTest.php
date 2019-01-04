@@ -109,8 +109,7 @@ class ConnectionTest extends TestCase
         $profile = $this->getProfile('OK');
 
         $this->assertEquals('OK', $profile->getResponse());
-        $this->assertNull($profile->getException());
-        $this->assertEquals('', $profile->getErrorMessage());
+        $this->assertNull($profile->getError());
         $this->assertEquals($profile->getMethod(), 'SET');
         $this->assertEquals($profile->getArguments(), ['key', 'value']);
         $this->assertTrue($profile->getDuration() > 0);
@@ -125,8 +124,7 @@ class ConnectionTest extends TestCase
     {
         $profile = $this->getProfile(new Error('ERROR'));
 
-        $this->assertEquals('ERROR', $profile->getErrorMessage());
-        $this->assertInstanceOf(\Exception::class, $profile->getException());
+        $this->assertEquals('ERROR', $profile->getError());
     }
 
     public function testExceptionProfile()
@@ -135,8 +133,7 @@ class ConnectionTest extends TestCase
 
         $profile = $this->getProfile('OK', new \Exception('EXCEPTION'));
 
-        $this->assertEquals('EXCEPTION', $profile->getErrorMessage());
-        $this->assertInstanceOf(\Exception::class, $profile->getException());
+        $this->assertEquals('EXCEPTION', $profile->getError());
     }
 
     protected function getProfile($response, \Exception $exception = null)

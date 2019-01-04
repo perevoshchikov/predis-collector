@@ -28,7 +28,7 @@ class ProfileTest extends TestCase
         $stopMemory  = 4691048;
 
         $this->profile->start(0, $startMemory);
-        $this->profile->end(null, 0, $stopMemory);
+        $this->profile->end( 0, $stopMemory);
 
         $this->assertEquals($startMemory, $this->profile->getStartMemory());
         $this->assertEquals($stopMemory, $this->profile->getEndMemory());
@@ -41,7 +41,7 @@ class ProfileTest extends TestCase
         $stopTime = 0.301;
 
         $this->profile->start($startTime, 0);
-        $this->profile->end(null, $stopTime, 0);
+        $this->profile->end($stopTime, 0);
 
         $this->assertEquals($startTime, $this->profile->getStartTime());
         $this->assertEquals($stopTime, $this->profile->getEndTime());
@@ -59,19 +59,15 @@ class ProfileTest extends TestCase
     public function testEmptyException()
     {
         $this->assertTrue($this->profile->isSuccess());
-        $this->assertEquals('', $this->profile->getErrorMessage());
-        $this->assertNull($this->profile->getException());
+        $this->assertNull($this->profile->getError());
     }
 
-    public function testException()
+    public function testError()
     {
-        $exception = new \Exception('Error');
-
-        $this->profile->end($exception);
+        $this->profile->setError('Error');
 
         $this->assertFalse($this->profile->isSuccess());
-        $this->assertEquals($exception->getMessage(), $this->profile->getErrorMessage());
-        $this->assertEquals($exception, $this->profile->getException());
+        $this->assertEquals('Error', $this->profile->getError());
     }
 
     public function testEmptyResponse()

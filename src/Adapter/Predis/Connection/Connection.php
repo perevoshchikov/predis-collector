@@ -181,23 +181,21 @@ class Connection implements ConnectionInterface, FormatterInterface, CollectorCo
 
         try {
             $result = $this->connection->executeCommand($command);
-        } catch (\Exception $e) {
-            $result = null;
+        } catch (\Exception $exception) {
+            $profile->setError($exception->getMessage());
+
+            throw $exception;
+        } finally {
+            $profile->end();
         }
 
         if (\is_object($result) && $result instanceof ErrorInterface) {
-            $profile->end(new \Exception($result->getMessage()));
-        } else {
-            $profile->end($e ?? null);
-        }
-
-        $this->addProfile($profile);
-
-        if (isset($e)) {
-            throw $e;
+            $profile->setError($result->getMessage());
         }
 
         $profile->setResponse($result);
+
+        $this->addProfile($profile);
 
         return $result;
     }

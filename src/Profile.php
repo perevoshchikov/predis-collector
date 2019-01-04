@@ -39,9 +39,9 @@ class Profile
     protected $memoryDelta = 0;
 
     /**
-     * @var \Exception|null
+     * @var string|null
      */
-    protected $exception;
+    protected $error;
 
     /**
      * @var string
@@ -79,17 +79,15 @@ class Profile
     }
 
     /**
-     * @param \Exception|null $exception
      * @param float|null $endTime
      * @param int|null $endMemory
      */
-    public function end(\Exception $exception = null, float $endTime = null, int $endMemory = null): void
+    public function end(float $endTime = null, int $endMemory = null): void
     {
         $this->endTime     = $endTime ?? microtime(true);
         $this->duration    = $this->endTime - $this->startTime;
         $this->endMemory   = $endMemory ?? memory_get_usage(false);
         $this->memoryDelta = $this->endMemory - $this->startMemory;
-        $this->exception   = $exception;
     }
 
     /**
@@ -145,23 +143,23 @@ class Profile
      */
     public function isSuccess(): bool
     {
-        return $this->exception === null;
+        return $this->error === null;
     }
 
     /**
-     * @return \Exception|null
+     * @param string|null $error
      */
-    public function getException(): ?\Exception
+    public function setError(?string $error): void
     {
-        return $this->exception;
+        $this->error = $error;
     }
 
     /**
      * @return string
      */
-    public function getErrorMessage(): string
+    public function getError(): ?string
     {
-        return $this->exception !== null ? $this->exception->getMessage() : '';
+        return $this->error;
     }
 
     /**
