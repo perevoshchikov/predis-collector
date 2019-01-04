@@ -120,6 +120,37 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testCollect()
     {
+        $this->assertCollect(new CommandFormatter(), new ResponseFormatter());
+    }
+
+    public function testCustomFormatters()
+    {
+        $response = $this->createMock(ResponseFormatterInterface::class);
+        $response->expects($this->atLeastOnce())
+            ->method('supports')
+            ->will($this->returnValue(true));
+        $response->expects($this->atLeastOnce())
+            ->method('format')
+            ->willReturn('response');
+
+        $command = $this->createMock(CommandFormatterInterface::class);
+        $command->expects($this->atLeastOnce())
+            ->method('supports')
+            ->will($this->returnValue(true));
+        $command->expects($this->atLeastOnce())
+            ->method('format')
+            ->willReturn('command');
+
+        $this->collector->addResponseFormatter($response);
+        $this->collector->addCommandFormatter($command);
+
+        $this->assertCollect($command, $response);
+    }
+
+    public function assertCollect(
+        CommandFormatterInterface $commandFormatter,
+        ResponseFormatterInterface $responseFormatter
+    ) {
         $profile = new Profile('SET', ['key', 'value']);
 
         $startTime   = 0.2133;
@@ -127,20 +158,20 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
         $startMemory = 4595112;
         $stopMemory  = 4691048;
 
-        $response = 'OK';
-
-        $connection = $this->createMock(ConnectionInterface::class);
-        $connection->expects($this->any())
-            ->method('getProfiles')
-            ->will($this->returnValue([$profile]));
-        $connection->expects($this->any())
-            ->method('getConnectionId')
-            ->will($this->returnValue('connectionMock'));
-
         $profile->start($startTime, $startMemory);
         $profile->end($stopTime, $stopMemory);
         $profile->setError('ERROR');
-        $profile->setResponse($response);
+        $profile->setResponse('OK');
+
+        $connection = $this->createMock(ConnectionInterface::class);
+
+        $connection->expects($this->atLeastOnce())
+            ->method('getProfiles')
+            ->will($this->returnValue([$profile]));
+
+        $connection->expects($this->atLeastOnce())
+            ->method('getConnectionId')
+            ->will($this->returnValue('connectionMock'));
 
         $this->collector->addConnection($connection);
 
@@ -152,8 +183,8 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
             'memory' => $profile->getMemoryUsage(),
             'profiles' => [
                 [
-                    'prepared_profile' => (new CommandFormatter())->format($profile),
-                    'prepared_response' => (new ResponseFormatter())->format($response),
+                    'prepared_profile' => $commandFormatter->format($profile),
+                    'prepared_response' => $responseFormatter->format('OK'),
                     'duration' => $profile->getDuration(),
                     'duration_str' => $this->collector
                         ->getDataFormatter()
