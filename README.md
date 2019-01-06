@@ -50,9 +50,9 @@ $collector->addResponseFormatter(new StringFormatter());
 
 // command formatters
 
-use Acme\CommandFormatter;
+use Anper\RedisCollector\Format\Command\HighlightFormatter;
 
-$collector->addCommandFormatter(new CommandFormatter());
+$collector->addCommandFormatter(new HighlightFormatter());
 
 ```
 
