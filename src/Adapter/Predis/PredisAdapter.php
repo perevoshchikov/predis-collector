@@ -42,6 +42,7 @@ class PredisAdapter
     /**
      * @param Client $client
      * @return ConnectionInterface
+     * @throws InvalidConnectionException
      */
     public function addClient(Client $client): ConnectionInterface
     {
@@ -83,51 +84,29 @@ class PredisAdapter
     /**
      * @param Client $client
      * @return ConnectionInterface
+     * @throws InvalidConnectionException
      */
     protected function replaceConnection(Client $client): ConnectionInterface
     {
-        $connection = $this->getConnection($client);
+        $ref = new \ReflectionClass(Client::class);
 
-        $wrapped = $this->addConnection($connection);
+        foreach ($ref->getProperties() as $property) {
+            $property->setAccessible(true);
 
-        $this->setConnection($client, $wrapped);
+            $value = $property->getValue($client);
 
-        return $wrapped;
-    }
+            if (\is_object($value) && $value instanceof PredisConnection) {
+                $wrapped = $this->addConnection($value);
 
-    /**
-     * @param Client $client
-     * @return PredisConnection
-     */
-    protected function getConnection(Client $client): PredisConnection
-    {
-        $getter = \Closure::bind(function ($client) {
-            return $client->connection;
-        }, null, $client);
+                $property->setValue($client, $wrapped);
 
-        $connection = $getter($client);
-
-        if ($connection instanceof PredisConnection) {
-            return $connection;
+                return $wrapped;
+            }
         }
 
         throw new InvalidConnectionException(sprintf(
-            'Expected client connection instance of "%s", given "%s"',
-            PredisConnection::class,
-            \is_object($connection) ? \get_class($connection) : \gettype($connection)
+            'Expected client connection instance of "%s"',
+            PredisConnection::class
         ));
-    }
-
-    /**
-     * @param Client $client
-     * @param ConnectionInterface $connection
-     */
-    protected function setConnection(Client $client, ConnectionInterface $connection): void
-    {
-        $setter = \Closure::bind(function ($client, $connection) {
-            $client->connection = $connection;
-        }, null, $client);
-
-        $setter($client, $connection);
     }
 }

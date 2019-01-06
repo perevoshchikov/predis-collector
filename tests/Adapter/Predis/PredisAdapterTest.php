@@ -46,11 +46,7 @@ class PredisAdapterTest extends TestCase
         /** @var Connection $wrapped */
         $wrapped = $this->adapter->addClient($client);
 
-        $getter = \Closure::bind(function ($client) {
-            return $client->connection;
-        }, null, $client);
-
-        $this->assertEquals($wrapped, $getter($client));
+        $this->assertEquals($wrapped, $client->getConnection());
     }
 
     public function testAddConnection()
@@ -89,21 +85,16 @@ class PredisAdapterTest extends TestCase
     {
         $this->expectException(InvalidConnectionException::class);
 
-        $connection = $this->createMock(ConnectionInterface::class);
-        $client = new Client($connection);
-
-        $setter = \Closure::bind(function ($client, $connection) {
-            $client->connection = $connection;
-        }, null, $client);
-
-        $setter($client, null);
+        $client = $this->createMock(Client::class);
 
         $this->adapter->addClient($client);
     }
 
     protected function assertWrappedConnection(string $connection, string $wrapped)
     {
+        /** @var ConnectionInterface $conn */
         $conn = $this->createMock($connection);
+        /** @var Connection $wrap */
         $wrap = $this->adapter->wrapConnection($conn);
 
         $this->assertInstanceOf($wrapped, $wrap);
