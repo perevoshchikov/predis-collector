@@ -36,7 +36,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([
             'redis' => [
                 'icon' => 'align-justify',
-                'widget' => 'PhpDebugBar.Widgets.RedisQueriesWidget',
+                'widget' => 'PhpDebugBar.Widgets.RedisCommandsWidget',
                 'map' => 'redis',
                 'default' => '[]'
             ],
