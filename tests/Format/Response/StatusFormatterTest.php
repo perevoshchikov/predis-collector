@@ -1,21 +1,21 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Adapter\Predis\Format;
+namespace Anper\PredisCollector\Tests\Format\Response;
 
-use Anper\RedisCollector\Adapter\Predis\Format\ResponseFormatter;
+use Anper\PredisCollector\Format\Response\StatusFormatter;
 use PHPUnit\Framework\TestCase;
 use Predis\Response\Status;
 
-class ResponseFormatterTest extends TestCase
+class StatusFormatterTest extends TestCase
 {
     /**
-     * @var ResponseFormatter
+     * @var StatusFormatter
      */
     protected $formatter;
 
     protected function setUp()
     {
-        $this->formatter = new ResponseFormatter();
+        $this->formatter = new StatusFormatter();
     }
 
     protected function tearDown()

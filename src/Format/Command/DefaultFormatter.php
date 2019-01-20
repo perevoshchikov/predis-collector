@@ -1,9 +1,9 @@
 <?php
 
-namespace Anper\RedisCollector\Format\Command;
+namespace Anper\PredisCollector\Format\Command;
 
-use Anper\RedisCollector\Format\CommandFormatterInterface;
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Format\CommandFormatterInterface;
+use Anper\PredisCollector\Profile;
 
 class DefaultFormatter implements CommandFormatterInterface
 {

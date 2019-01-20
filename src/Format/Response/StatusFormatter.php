@@ -1,11 +1,11 @@
 <?php
 
-namespace Anper\RedisCollector\Adapter\Predis\Format;
+namespace Anper\PredisCollector\Format\Response;
 
-use Anper\RedisCollector\Format\ResponseFormatterInterface;
+use Anper\PredisCollector\Format\ResponseFormatterInterface;
 use Predis\Response\Status;
 
-class ResponseFormatter implements ResponseFormatterInterface
+class StatusFormatter implements ResponseFormatterInterface
 {
     /**
      * @inheritDoc

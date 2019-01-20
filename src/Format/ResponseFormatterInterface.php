@@ -1,6 +1,6 @@
 <?php
 
-namespace Anper\RedisCollector\Format;
+namespace Anper\PredisCollector\Format;
 
 interface ResponseFormatterInterface
 {

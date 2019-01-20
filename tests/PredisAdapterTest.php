@@ -1,13 +1,13 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Adapter\Predis;
+namespace Anper\PredisCollector\Tests;
 
-use Anper\RedisCollector\Adapter\Predis\Connection\AggregateConnection;
-use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
-use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
-use Anper\RedisCollector\Adapter\Predis\Exception\InvalidConnectionException;
-use Anper\RedisCollector\Adapter\Predis\PredisAdapter;
-use Anper\RedisCollector\RedisCollector;
+use Anper\PredisCollector\Connection\AggregateConnection;
+use Anper\PredisCollector\Connection\Connection;
+use Anper\PredisCollector\Connection\NodeConnection;
+use Anper\PredisCollector\Exception\InvalidConnectionException;
+use Anper\PredisCollector\PredisAdapter;
+use Anper\PredisCollector\PredisCollector;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Predis\Connection\AggregateConnectionInterface;
@@ -17,7 +17,7 @@ use Predis\Connection\NodeConnectionInterface;
 class PredisAdapterTest extends TestCase
 {
     /**
-     * @var RedisCollector
+     * @var PredisCollector
      */
     protected $collector;
 
@@ -28,7 +28,7 @@ class PredisAdapterTest extends TestCase
 
     protected function setUp()
     {
-        $this->collector = new RedisCollector();
+        $this->collector = new PredisCollector();
         $this->adapter = new PredisAdapter($this->collector);
     }
 
@@ -43,7 +43,7 @@ class PredisAdapterTest extends TestCase
         $connection = $this->createMock(ConnectionInterface::class);
         $client = new Client($connection);
 
-        /** @var Connection $wrapped */
+        /** @var \Anper\PredisCollector\Connection\Connection $wrapped */
         $wrapped = $this->adapter->addClient($client);
 
         $this->assertEquals($wrapped, $client->getConnection());
@@ -53,12 +53,8 @@ class PredisAdapterTest extends TestCase
     {
         $connection = $this->createMock(ConnectionInterface::class);
 
-        $this->assertCount(1, $this->collector->getResponseFormatters());
-
-        /** @var Connection $wrapped */
+        /** @var \Anper\PredisCollector\Connection\Connection $wrapped */
         $wrapped = $this->adapter->addConnection($connection);
-
-        $this->assertCount(2, $this->collector->getResponseFormatters());
 
         $this->assertInstanceOf(Connection::class, $wrapped);
         $this->assertContains($wrapped, $this->collector->getConnections());
@@ -94,7 +90,7 @@ class PredisAdapterTest extends TestCase
     {
         /** @var ConnectionInterface $conn */
         $conn = $this->createMock($connection);
-        /** @var Connection $wrap */
+        /** @var \Anper\RedisCollector\Connection\Connection $wrap */
         $wrap = $this->adapter->wrapConnection($conn);
 
         $this->assertInstanceOf($wrapped, $wrap);

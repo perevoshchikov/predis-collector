@@ -1,12 +1,12 @@
 <?php
 
-namespace Anper\RedisCollector\Format\Response;
+namespace Anper\PredisCollector\Format\Response;
 
-use Anper\RedisCollector\Format\ResponseFormatterInterface;
+use Anper\PredisCollector\Format\ResponseFormatterInterface;
 
 /**
  * Class ArrayFormatter
- * @package Anper\RedisCollector\Format
+ * @package Anper\PredisCollector\Format
  */
 class ArrayFormatter implements ResponseFormatterInterface
 {

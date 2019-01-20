@@ -1,9 +1,9 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Format\Command;
+namespace Anper\PredisCollector\Tests\Format\Command;
 
-use Anper\RedisCollector\Format\Command\HighlightFormatter;
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Format\Command\HighlightFormatter;
+use Anper\PredisCollector\Profile;
 use PHPUnit\Framework\TestCase;
 
 class HighlightFormatterTest extends TestCase

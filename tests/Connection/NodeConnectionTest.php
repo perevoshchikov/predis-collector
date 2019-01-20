@@ -1,8 +1,8 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Tests\Connection;
 
-use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
+use Anper\PredisCollector\Connection\NodeConnection;
 use PHPUnit\Framework\TestCase;
 use Predis\Command\CommandInterface;
 use Predis\Connection\NodeConnectionInterface;

@@ -1,29 +1,29 @@
 <?php
 
-namespace Anper\RedisCollector\Tests;
+namespace Anper\PredisCollector\Tests;
 
-use Anper\RedisCollector\ConnectionInterface;
-use Anper\RedisCollector\Format\CommandFormatterInterface;
-use Anper\RedisCollector\Format\ResponseFormatterInterface;
-use Anper\RedisCollector\RedisCollector;
-use Anper\RedisCollector\Profile;
-use Anper\RedisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
-use Anper\RedisCollector\Format\Command\DefaultFormatter as CommandFormatter;
+use Anper\PredisCollector\Connection\ConnectionInterface;
+use Anper\PredisCollector\Format\CommandFormatterInterface;
+use Anper\PredisCollector\Format\ResponseFormatterInterface;
+use Anper\PredisCollector\PredisCollector;
+use Anper\PredisCollector\Profile;
+use Anper\PredisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
+use Anper\PredisCollector\Format\Command\DefaultFormatter as CommandFormatter;
 
 /**
- * Class RedisCollectorTest
- * @package Anper\RedisCollector\Tests
+ * Class PredisCollectorTest
+ * @package Anper\PredisCollector\Tests
  */
-class RedisCollectorTest extends \PHPUnit\Framework\TestCase
+class PredisCollectorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var RedisCollector
+     * @var PredisCollector
      */
     protected $collector;
 
     protected function setUp()
     {
-        $this->collector = new RedisCollector();
+        $this->collector = new PredisCollector();
     }
 
     protected function tearDown()
@@ -34,14 +34,14 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
     public function testGetWidgets()
     {
         $this->assertEquals([
-            'redis' => [
+            'predis' => [
                 'icon' => 'align-justify',
                 'widget' => 'PhpDebugBar.Widgets.RedisCommandsWidget',
-                'map' => 'redis',
+                'map' => 'predis',
                 'default' => '[]'
             ],
-            'redis:badge' => [
-                'map' => 'redis.nb_profiles',
+            'predis:badge' => [
+                'map' => 'predis.nb_profiles',
                 'default' => 'null'
             ]
         ], $this->collector->getWidgets());
@@ -96,9 +96,9 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
 
     public function testGetName()
     {
-        $this->assertEquals('redis', $this->collector->getName());
+        $this->assertEquals('predis', $this->collector->getName());
 
-        $collector = new RedisCollector(null, 'custom');
+        $collector = new PredisCollector(null, 'custom');
 
         $this->assertEquals('custom', $collector->getName());
     }
@@ -107,7 +107,7 @@ class RedisCollectorTest extends \PHPUnit\Framework\TestCase
     {
         $mock = $this->createMock(ConnectionInterface::class);
 
-        $collector = new RedisCollector($mock);
+        $collector = new PredisCollector($mock);
 
         $this->assertContains($mock, $collector->getConnections());
     }

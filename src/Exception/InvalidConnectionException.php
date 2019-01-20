@@ -1,6 +1,6 @@
 <?php
 
-namespace Anper\RedisCollector\Adapter\Predis\Exception;
+namespace Anper\PredisCollector\Exception;
 
 class InvalidConnectionException extends \RuntimeException
 {

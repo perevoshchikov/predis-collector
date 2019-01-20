@@ -1,8 +1,8 @@
 <?php
 
-namespace Anper\RedisCollector\Tests;
+namespace Anper\PredisCollector\Tests;
 
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Profile;
 use PHPUnit\Framework\TestCase;
 
 class ProfileTest extends TestCase

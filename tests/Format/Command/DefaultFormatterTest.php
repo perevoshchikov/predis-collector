@@ -1,9 +1,9 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Format\Command;
+namespace Anper\PredisCollector\Tests\Format\Command;
 
-use Anper\RedisCollector\Format\Command\DefaultFormatter;
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Format\Command\DefaultFormatter;
+use Anper\PredisCollector\Profile;
 use PHPUnit\Framework\TestCase;
 
 class DefaultFormatterTest extends TestCase

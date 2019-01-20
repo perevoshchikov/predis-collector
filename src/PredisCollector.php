@@ -1,20 +1,21 @@
 <?php
 
-namespace Anper\RedisCollector;
+namespace Anper\PredisCollector;
 
-use Anper\RedisCollector\Format\CommandFormatterInterface;
-use Anper\RedisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
-use Anper\RedisCollector\Format\Command\DefaultFormatter as CommandFormatter;
-use Anper\RedisCollector\Format\ResponseFormatterInterface;
+use Anper\PredisCollector\Connection\ConnectionInterface;
+use Anper\PredisCollector\Format\CommandFormatterInterface;
+use Anper\PredisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
+use Anper\PredisCollector\Format\Command\DefaultFormatter as CommandFormatter;
+use Anper\PredisCollector\Format\ResponseFormatterInterface;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 
 /**
- * Class RedisCollector
- * @package Anper\RedisCollector
+ * Class PredisCollector
+ * @package Anper\PredisCollector
  */
-class RedisCollector extends DataCollector implements Renderable, AssetProvider
+class PredisCollector extends DataCollector implements Renderable, AssetProvider
 {
     /**
      * @var ConnectionInterface[]
@@ -40,7 +41,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
      * @param ConnectionInterface|null $connection
      * @param string $name
      */
-    public function __construct(ConnectionInterface $connection = null, string $name = 'redis')
+    public function __construct(ConnectionInterface $connection = null, string $name = 'predis')
     {
         if ($connection !== null) {
             $this->addConnection($connection);
@@ -54,7 +55,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
 
     /**
      * @param ConnectionInterface $connection
-     * @return RedisCollector
+     * @return PredisCollector
      */
     public function addConnection(ConnectionInterface $connection): self
     {
@@ -76,7 +77,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     /**
      * @param ResponseFormatterInterface $formatter
      * @param int $priority
-     * @return RedisCollector
+     * @return PredisCollector
      */
     public function addResponseFormatter(ResponseFormatterInterface $formatter, int $priority = 10): self
     {
@@ -98,7 +99,7 @@ class RedisCollector extends DataCollector implements Renderable, AssetProvider
     /**
      * @param CommandFormatterInterface $formatter
      * @param int $priority
-     * @return RedisCollector
+     * @return PredisCollector
      */
     public function addCommandFormatter(CommandFormatterInterface $formatter, int $priority = 10): self
     {

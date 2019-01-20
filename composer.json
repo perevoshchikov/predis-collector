@@ -1,13 +1,14 @@
 {
-    "name": "anper/redis-collector",
+    "name": "anper/predis-collector",
     "type": "library",
-    "description": "Redis collector for PHP debugbar.",
+    "description": "Predis collector for PHP debugbar.",
     "keywords": [
         "redis",
+        "predis",
         "collector",
         "debugbar"
     ],
-    "homepage": "https://github.com/perevoshchikov/redis-collector",
+    "homepage": "https://github.com/perevoshchikov/predis-collector",
     "license": "MIT",
     "authors": [
         {
@@ -17,26 +18,23 @@
     ],
     "require": {
         "php": "~7.1",
-        "maximebf/debugbar": "^1.15"
+        "maximebf/debugbar": "^1.15",
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.9.2",
         "phpunit/php-code-coverage": "^6.0",
         "phpunit/phpunit": "^7.1",
-        "predis/predis": "^1.1",
         "squizlabs/php_codesniffer": "^2.3"
-    },
-    "suggest": {
-        "predis/predis": "Flexible and feature-complete Redis client for PHP and HHVM"
     },
     "autoload": {
         "psr-4": {
-            "Anper\\RedisCollector\\": "src"
+            "Anper\\PredisCollector\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Anper\\RedisCollector\\Tests\\": "tests"
+            "Anper\\PredisCollector\\Tests\\": "tests"
         }
     },
     "scripts": {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Tests\Connection;
 
-use Anper\RedisCollector\Adapter\Predis\Connection\AggregateConnection;
-use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
-use Anper\RedisCollector\Adapter\Predis\PredisAdapter;
-use Anper\RedisCollector\RedisCollector;
+use Anper\PredisCollector\Connection\AggregateConnection;
+use Anper\PredisCollector\Connection\NodeConnection;
+use Anper\PredisCollector\PredisAdapter;
+use Anper\PredisCollector\PredisCollector;
 use PHPUnit\Framework\TestCase;
 use Predis\Command\CommandInterface;
 use Predis\Connection\AggregateConnectionInterface;
@@ -28,7 +28,7 @@ class AggregateConnectionTest extends TestCase
             ->willReturn(true)
         ;
 
-        $connection = new AggregateConnection($mock, new PredisAdapter(new RedisCollector()));
+        $connection = new AggregateConnection($mock, new PredisAdapter(new PredisCollector()));
 
         $this->assertTrue($connection->remove($node));
         $this->assertNull($connection->add($node));
@@ -54,11 +54,11 @@ class AggregateConnectionTest extends TestCase
             ->willReturn($node)
         ;
 
-        $collector = new RedisCollector();
+        $collector = new PredisCollector();
 
         $connection = new AggregateConnection($mock, new PredisAdapter($collector));
 
-        /** @var NodeConnection $conn */
+        /** @var \Anper\RedisCollector\Connection\NodeConnection $conn */
         $conn = $connection->getConnection($command);
 
         $this->assertInstanceOf(NodeConnectionInterface::class, $conn);
@@ -92,7 +92,7 @@ class AggregateConnectionTest extends TestCase
             ->willReturn(null)
         ;
 
-        $connection = new AggregateConnection($mock, new PredisAdapter(new RedisCollector()));
+        $connection = new AggregateConnection($mock, new PredisAdapter(new PredisCollector()));
 
         $this->assertNull($connection->getConnection($command));
         $this->assertNull($connection->getConnectionById($connectionID));

@@ -1,13 +1,14 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Tests\Connection;
 
-use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Connection\Connection;
+use Anper\PredisCollector\Profile;
 use PHPUnit\Framework\TestCase;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Response\Error;
+use Anper\PredisCollector\Tests\Connection\ConnectionMock;
 
 class ConnectionTest extends TestCase
 {

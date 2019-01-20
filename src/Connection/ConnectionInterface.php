@@ -1,10 +1,12 @@
 <?php
 
-namespace Anper\RedisCollector;
+namespace Anper\PredisCollector\Connection;
+
+use Anper\PredisCollector\Profile;
 
 /**
  * Interface ConnectionInterface
- * @package Anper\RedisCollector
+ * @package Anper\PredisCollector
  */
 interface ConnectionInterface
 {

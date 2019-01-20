@@ -1,10 +1,10 @@
 <?php
 
-namespace Anper\RedisCollector;
+namespace Anper\PredisCollector;
 
 /**
  * Class Profile
- * @package Anper\RedisCollector
+ * @package Anper\PredisCollector
  */
 class Profile
 {

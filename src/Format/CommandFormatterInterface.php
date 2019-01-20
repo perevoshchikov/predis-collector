@@ -1,8 +1,8 @@
 <?php
 
-namespace Anper\RedisCollector\Format;
+namespace Anper\PredisCollector\Format;
 
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Profile;
 
 interface CommandFormatterInterface
 {

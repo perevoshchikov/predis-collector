@@ -1,13 +1,13 @@
 <?php
 
-namespace Anper\RedisCollector\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Connection;
 
 use Predis\Command\CommandInterface;
 use Predis\Connection\NodeConnectionInterface;
 
 /**
  * Class NodeConnection
- * @package Anper\RedisCollector\Adapter\Predis
+ * @package Anper\PredisCollector\Adapter\Predis
  *
  * @property NodeConnectionInterface $connection
  */

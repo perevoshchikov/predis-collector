@@ -1,8 +1,8 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Format\Response;
+namespace Anper\PredisCollector\Tests\Format\Response;
 
-use Anper\RedisCollector\Format\Response\StringFormatter;
+use Anper\PredisCollector\Format\Response\StringFormatter;
 use PHPUnit\Framework\TestCase;
 
 class StringFormatterTest extends TestCase

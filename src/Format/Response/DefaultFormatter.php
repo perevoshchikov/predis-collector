@@ -1,8 +1,8 @@
 <?php
 
-namespace Anper\RedisCollector\Format\Response;
+namespace Anper\PredisCollector\Format\Response;
 
-use Anper\RedisCollector\Format\ResponseFormatterInterface;
+use Anper\PredisCollector\Format\ResponseFormatterInterface;
 
 class DefaultFormatter implements ResponseFormatterInterface
 {

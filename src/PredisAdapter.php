@@ -1,14 +1,12 @@
 <?php
 
-namespace Anper\RedisCollector\Adapter\Predis;
+namespace Anper\PredisCollector;
 
-use Anper\RedisCollector\Adapter\Predis\Connection\AggregateConnection;
-use Anper\RedisCollector\Adapter\Predis\Connection\Connection;
-use Anper\RedisCollector\Adapter\Predis\Connection\NodeConnection;
-use Anper\RedisCollector\Adapter\Predis\Exception\InvalidConnectionException;
-use Anper\RedisCollector\Adapter\Predis\Format\ResponseFormatter;
-use Anper\RedisCollector\ConnectionInterface;
-use Anper\RedisCollector\RedisCollector;
+use Anper\PredisCollector\Connection\AggregateConnection;
+use Anper\PredisCollector\Connection\Connection;
+use Anper\PredisCollector\Connection\ConnectionInterface;
+use Anper\PredisCollector\Connection\NodeConnection;
+use Anper\PredisCollector\Exception\InvalidConnectionException;
 use Predis\Client;
 use Predis\Connection\AggregateConnectionInterface;
 use Predis\Connection\ConnectionInterface as PredisConnection;
@@ -16,27 +14,21 @@ use Predis\Connection\NodeConnectionInterface;
 
 /**
  * Class PredisAdapter
- * @package Anper\RedisCollector\Adapter\Predis
+ * @package Anper\PredisCollector\Adapter\Predis
  */
 class PredisAdapter
 {
     /**
-     * @var RedisCollector
+     * @var PredisCollector
      */
     protected $collector;
 
     /**
-     * @var ResponseFormatter
+     * @param PredisCollector $collector
      */
-    protected $formatter;
-
-    /**
-     * @param RedisCollector $collector
-     */
-    public function __construct(RedisCollector $collector)
+    public function __construct(PredisCollector $collector)
     {
         $this->collector = $collector;
-        $this->formatter = new ResponseFormatter();
     }
 
     /**
@@ -58,8 +50,6 @@ class PredisAdapter
         $wrapped = $this->wrapConnection($connection);
 
         $this->collector->addConnection($wrapped);
-
-        $this->collector->addResponseFormatter($this->formatter);
 
         return $wrapped;
     }

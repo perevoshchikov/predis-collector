@@ -1,16 +1,16 @@
 <?php
 
-namespace Anper\RedisCollector\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Connection;
 
-use Anper\RedisCollector\Profile;
+use Anper\PredisCollector\Profile;
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Response\ErrorInterface;
-use Anper\RedisCollector\ConnectionInterface as CollectorConnectionInterface;
+use Anper\PredisCollector\Connection\ConnectionInterface as CollectorConnectionInterface;
 
 /**
  * Class Adapter
- * @package Anper\RedisCollector\Adapter\Predis
+ * @package Anper\PredisCollector\Adapter\Predis
  */
 class Connection implements ConnectionInterface, CollectorConnectionInterface
 {

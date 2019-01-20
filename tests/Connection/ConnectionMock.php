@@ -1,6 +1,6 @@
 <?php
 
-namespace Anper\RedisCollector\Tests\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Tests\Connection;
 
 use Predis\Command\CommandInterface;
 use Predis\Connection\ConnectionInterface;

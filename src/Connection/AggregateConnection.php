@@ -1,15 +1,15 @@
 <?php
 
-namespace Anper\RedisCollector\Adapter\Predis\Connection;
+namespace Anper\PredisCollector\Connection;
 
-use Anper\RedisCollector\Adapter\Predis\PredisAdapter;
+use Anper\PredisCollector\PredisAdapter;
 use Predis\Command\CommandInterface;
 use Predis\Connection\AggregateConnectionInterface;
 use Predis\Connection\NodeConnectionInterface;
 
 /**
  * Class AggregateConnection
- * @package Anper\RedisCollector\Adapter\Predis
+ * @package Anper\PredisCollector\Adapter\Predis
  *
  * @property AggregateConnectionInterface $connection
  */
@@ -69,7 +69,7 @@ class AggregateConnection extends Connection implements AggregateConnectionInter
 
     /**
      * @param NodeConnectionInterface|null $connection
-     * @return \Anper\RedisCollector\ConnectionInterface|null
+     * @return ConnectionInterface|null
      */
     protected function wrapConnection(?NodeConnectionInterface $connection)
     {
