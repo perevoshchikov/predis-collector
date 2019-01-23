@@ -18,5 +18,5 @@ interface ConnectionInterface
     /**
      * @return string
      */
-    public function getConnectionId(): string;
+    public function getName(): string;
 }

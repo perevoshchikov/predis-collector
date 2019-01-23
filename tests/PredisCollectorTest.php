@@ -170,7 +170,7 @@ class PredisCollectorTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue([$profile]));
 
         $connection->expects($this->atLeastOnce())
-            ->method('getConnectionId')
+            ->method('getName')
             ->will($this->returnValue('connectionMock'));
 
         $this->collector->addConnection($connection);
@@ -195,7 +195,7 @@ class PredisCollectorTest extends \PHPUnit\Framework\TestCase
                         ->formatBytes($profile->getMemoryUsage()),
                     'is_success' => $profile->isSuccess(),
                     'error_message' => $profile->getError(),
-                    'connection_id' => $connection->getConnectionId(),
+                    'connection_id' => $connection->getName(),
                 ]
             ],
             'duration_str' => $this->collector

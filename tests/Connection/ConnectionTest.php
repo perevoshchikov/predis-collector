@@ -38,6 +38,28 @@ class ConnectionTest extends TestCase
         $this->assertEquals($mock, $connection->getSourceConnection());
     }
 
+    public function testDefaultName()
+    {
+        $mock = $this->createMock(ConnectionMock::class);
+        $mock->expects($this->once())
+            ->method('__toString')
+            ->willReturn('id');
+
+        $connection = new Connection($mock);
+        $this->assertEquals('id', $connection->getName());
+    }
+
+    public function testCustomName()
+    {
+        $mock = $this->createMock(ConnectionInterface::class);
+
+        $connection = new Connection($mock, 'custom1');
+        $this->assertEquals('custom1', $connection->getName());
+
+        $connection->setName('custom2');
+        $this->assertEquals('custom2', $connection->getName());
+    }
+
     public function testWrappedMethods()
     {
         $command = $this->createMock(CommandInterface::class);
@@ -149,7 +171,7 @@ class ConnectionTest extends TestCase
         $connection->foo = 'bar';
         $connection->foo;
         $connection->foo('bar');
-        $this->assertEquals('id', $connection->getConnectionId());
+        $this->assertEquals('id', $connection->getName());
     }
 
     protected function getProfile($response, \Exception $exception = null)

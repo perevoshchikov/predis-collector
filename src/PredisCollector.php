@@ -173,7 +173,7 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
                     'memory_str' => $this->getDataFormatter()->formatBytes($profile->getMemoryUsage()),
                     'is_success' => $profile->isSuccess(),
                     'error_message' => (string) $profile->getError(),
-                    'connection_id' => $connection->getConnectionId(),
+                    'connection_id' => $connection->getName(),
                 ];
             }
         }

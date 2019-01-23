@@ -25,11 +25,29 @@ class Connection implements ConnectionInterface, CollectorConnectionInterface
     protected $connection;
 
     /**
-     * @param ConnectionInterface $connection
+     * @var string|null
      */
-    public function __construct(ConnectionInterface $connection)
+    protected $name;
+
+    /**
+     * @param ConnectionInterface $connection
+     * @param string|null $name
+     */
+    public function __construct(ConnectionInterface $connection, string $name = null)
     {
         $this->connection = $connection;
+        $this->name = $name;
+    }
+
+    /**
+     * @param string|null $name
+     * @return Connection
+     */
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -43,9 +61,9 @@ class Connection implements ConnectionInterface, CollectorConnectionInterface
     /**
      * @inheritDoc
      */
-    public function getConnectionId(): string
+    public function getName(): string
     {
-        return (string) $this->connection;
+        return (string) ($this->name ?? $this->connection);
     }
 
     /**
