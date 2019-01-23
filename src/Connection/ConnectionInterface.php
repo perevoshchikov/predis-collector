@@ -6,7 +6,7 @@ use Anper\PredisCollector\Profile;
 
 /**
  * Interface ConnectionInterface
- * @package Anper\PredisCollector
+ * @package Anper\PredisCollector\Connection
  */
 interface ConnectionInterface
 {

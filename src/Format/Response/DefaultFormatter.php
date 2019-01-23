@@ -4,6 +4,10 @@ namespace Anper\PredisCollector\Format\Response;
 
 use Anper\PredisCollector\Format\ResponseFormatterInterface;
 
+/**
+ * Class DefaultFormatter
+ * @package Anper\PredisCollector\Format\Response
+ */
 class DefaultFormatter implements ResponseFormatterInterface
 {
     /**

@@ -14,7 +14,7 @@ use Predis\Connection\NodeConnectionInterface;
 
 /**
  * Class PredisAdapter
- * @package Anper\PredisCollector\Adapter\Predis
+ * @package Anper\PredisCollector
  */
 class PredisAdapter
 {

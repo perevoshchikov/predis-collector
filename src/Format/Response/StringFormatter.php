@@ -6,7 +6,7 @@ use Anper\PredisCollector\Format\ResponseFormatterInterface;
 
 /**
  * Class StringFormatter
- * @package Anper\PredisCollector\Format
+ * @package Anper\PredisCollector\Format\Response
  */
 class StringFormatter implements ResponseFormatterInterface
 {

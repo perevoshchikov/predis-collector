@@ -2,6 +2,10 @@
 
 namespace Anper\PredisCollector\Format;
 
+/**
+ * Interface ResponseFormatterInterface
+ * @package Anper\PredisCollector\Format
+ */
 interface ResponseFormatterInterface
 {
     /**

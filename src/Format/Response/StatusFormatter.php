@@ -5,6 +5,10 @@ namespace Anper\PredisCollector\Format\Response;
 use Anper\PredisCollector\Format\ResponseFormatterInterface;
 use Predis\Response\Status;
 
+/**
+ * Class StatusFormatter
+ * @package Anper\PredisCollector\Format\Response
+ */
 class StatusFormatter implements ResponseFormatterInterface
 {
     /**

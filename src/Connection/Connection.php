@@ -9,8 +9,8 @@ use Predis\Response\ErrorInterface;
 use Anper\PredisCollector\Connection\ConnectionInterface as CollectorConnectionInterface;
 
 /**
- * Class Adapter
- * @package Anper\PredisCollector\Adapter\Predis
+ * Class Connection
+ * @package Anper\PredisCollector\Connection
  */
 class Connection implements ConnectionInterface, CollectorConnectionInterface
 {

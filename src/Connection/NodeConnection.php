@@ -7,7 +7,7 @@ use Predis\Connection\NodeConnectionInterface;
 
 /**
  * Class NodeConnection
- * @package Anper\PredisCollector\Adapter\Predis
+ * @package Anper\PredisCollector\Connection
  *
  * @property NodeConnectionInterface $connection
  */

@@ -4,6 +4,10 @@ namespace Anper\PredisCollector\Format;
 
 use Anper\PredisCollector\Profile;
 
+/**
+ * Interface CommandFormatterInterface
+ * @package Anper\PredisCollector\Format
+ */
 interface CommandFormatterInterface
 {
     /**

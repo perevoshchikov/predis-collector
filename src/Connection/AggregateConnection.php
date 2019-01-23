@@ -9,7 +9,7 @@ use Predis\Connection\NodeConnectionInterface;
 
 /**
  * Class AggregateConnection
- * @package Anper\PredisCollector\Adapter\Predis
+ * @package Anper\PredisCollector\Connection
  *
  * @property AggregateConnectionInterface $connection
  */

@@ -5,6 +5,10 @@ namespace Anper\PredisCollector\Format\Command;
 use Anper\PredisCollector\Format\CommandFormatterInterface;
 use Anper\PredisCollector\Profile;
 
+/**
+ * Class DefaultFormatter
+ * @package Anper\PredisCollector\Format\Command
+ */
 class DefaultFormatter implements CommandFormatterInterface
 {
     /**
