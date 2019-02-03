@@ -3,6 +3,7 @@ language: php
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 ## Cache composer
 cache:
@@ -16,7 +17,7 @@ cache:
 
 matrix:
   include:
-    - php: 7.2
+    - php: 7.3
       env: DEPENDENCIES=satooshi/php-coveralls:~1.0 COVERAGE_FLAGS="--coverage-clover coverage.xml"
 
 before_install:
