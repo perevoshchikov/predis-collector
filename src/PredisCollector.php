@@ -205,9 +205,11 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
      */
     public function getAssets()
     {
+        $path = \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR;
+
         return [
-            'css' => __DIR__ . '/../resources/css/widget.css',
-            'js' => __DIR__ . '/../resources/js/widget.js',
+            'css' => $path . 'css' . DIRECTORY_SEPARATOR . 'widget.css',
+            'js' => $path . 'js' . DIRECTORY_SEPARATOR . 'widget.js',
         ];
     }
 
