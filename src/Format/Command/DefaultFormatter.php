@@ -24,6 +24,10 @@ class DefaultFormatter implements CommandFormatterInterface
      */
     public function format(Profile $profile): string
     {
-        return $profile->getMethod() . ' ' . implode(' ', $profile->getArguments());
+        $arguments = \array_map(function ($value) {
+            return $value === '' ? '""' : $value;
+        }, $profile->getArguments());
+
+        return $profile->getMethod() . ' ' . implode(' ', $arguments);
     }
 }

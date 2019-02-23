@@ -75,6 +75,10 @@ class HighlightFormatter implements CommandFormatterInterface
      */
     protected function formatArgument(int $key, string $argument): string
     {
-        return sprintf('<span style="%s">%s</span>', $this->styles['arguments'][$key] ?? '', $argument);
+        return sprintf(
+            '<span style="%s">%s</span>',
+            $this->styles['arguments'][$key] ?? '',
+            $argument === '' ? '""' : $argument
+        );
     }
 }
