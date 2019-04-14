@@ -2,14 +2,13 @@
 
 namespace Anper\PredisCollector;
 
-use Anper\PredisCollector\Connection\ConnectionInterface;
-use Anper\PredisCollector\Format\CommandFormatterInterface;
-use Anper\PredisCollector\Format\Response\DefaultFormatter as ResponseFormatter;
-use Anper\PredisCollector\Format\Command\DefaultFormatter as CommandFormatter;
-use Anper\PredisCollector\Format\ResponseFormatterInterface;
+use Anper\Predis\CommandCollector\Collector;
+use Anper\Predis\CommandCollector\CollectorInterface;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use Predis\ClientInterface;
+use Predis\Command\CommandInterface;
 
 /**
  * Class PredisCollector
@@ -18,104 +17,35 @@ use DebugBar\DataCollector\Renderable;
 class PredisCollector extends DataCollector implements Renderable, AssetProvider
 {
     /**
-     * @var ConnectionInterface[]
-     */
-    protected $connections = [];
-
-    /**
-     * @var array
-     */
-    protected $responseFormatters = [];
-
-    /**
-     * @var array
-     */
-    protected $commandFormatters = [];
-
-    /**
      * @var string
      */
     protected $name;
 
     /**
-     * @param ConnectionInterface|null $connection
+     * @var CollectorInterface
+     */
+    protected $collector;
+
+    /**
      * @param string $name
+     * @param CollectorInterface|null $collector
      */
-    public function __construct(ConnectionInterface $connection = null, string $name = 'predis')
+    public function __construct(string $name = 'predis', CollectorInterface $collector = null)
     {
-        if ($connection !== null) {
-            $this->addConnection($connection);
-        }
-
-        $this->name = $name;
-
-        $this->addResponseFormatter(new ResponseFormatter(), 0);
-        $this->addCommandFormatter(new CommandFormatter(), 0);
+        $this->name      = $name;
+        $this->collector = $collector ?? new Collector();
     }
 
     /**
-     * @param ConnectionInterface $connection
+     * @param ClientInterface $client
+     * @param string|null $name
      * @return PredisCollector
      */
-    public function addConnection(ConnectionInterface $connection): self
+    public function addClient(ClientInterface $client, string $name = null): self
     {
-        $id = spl_object_id($connection);
-
-        $this->connections[$id] = $connection;
+        $this->collector->addClient($client, $name);
 
         return $this;
-    }
-
-    /**
-     * @return ConnectionInterface[]
-     */
-    public function getConnections(): array
-    {
-        return $this->connections;
-    }
-
-    /**
-     * @param ResponseFormatterInterface $formatter
-     * @param int $priority
-     * @return PredisCollector
-     */
-    public function addResponseFormatter(ResponseFormatterInterface $formatter, int $priority = 10): self
-    {
-        $id = spl_object_id($formatter);
-
-        $this->responseFormatters[$id] = [$formatter, $priority];
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getResponseFormatters(): array
-    {
-        return $this->responseFormatters;
-    }
-
-    /**
-     * @param CommandFormatterInterface $formatter
-     * @param int $priority
-     * @return PredisCollector
-     */
-    public function addCommandFormatter(CommandFormatterInterface $formatter, int $priority = 10): self
-    {
-        $id = spl_object_id($formatter);
-
-        $this->commandFormatters[$id] = [$formatter, $priority];
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCommandFormatters(): array
-    {
-        return $this->commandFormatters;
     }
 
     /**
@@ -125,60 +55,24 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
     {
         $data = [
             'nb_profiles' => 0,
-            'duration' => 0,
-            'memory' => 0,
             'profiles' => []
         ];
 
-        $this->sortFormatters($this->responseFormatters);
-        $this->sortFormatters($this->commandFormatters);
+        foreach ($this->collector->getData() as $value) {
+            foreach ($value->getCommands() as $command) {
+                if ($command instanceof CommandInterface) {
+                    $data['nb_profiles']++;
 
-        foreach ($this->connections as $connection) {
-            $profiles = $this->collectProfiles($connection);
-
-            $data['nb_profiles'] += \count($profiles);
-
-            foreach ($profiles as $profile) {
-                $data['duration']  += $profile['duration'];
-                $data['memory']    += $profile['memory'];
-                $data['profiles'][] = $profile;
+                    $data['profiles'][] = [
+                        'method' => $command->getId(),
+                        'arguments' => $command->getArguments(),
+                        'connection' => $value->getClientName(),
+                    ];
+                }
             }
         }
-
-        $data['duration_str'] = $this->getDataFormatter()
-            ->formatDuration($data['duration']);
-
-        $data['memory_str'] = $this->getDataFormatter()
-            ->formatBytes($data['memory']);
 
         return $data;
-    }
-
-    /**
-     * @param ConnectionInterface $connection
-     * @return array
-     */
-    protected function collectProfiles(ConnectionInterface $connection): array
-    {
-        $profiles = [];
-
-        foreach ($connection->getProfiles() as $profile) {
-            if ($profile instanceof Profile) {
-                $profiles[] = [
-                    'prepared_profile' => $this->formatCommand($profile),
-                    'prepared_response' => $this->formatResponse($profile->getResponse()),
-                    'duration' => $profile->getDuration(),
-                    'duration_str' => $this->getDataFormatter()->formatDuration($profile->getDuration()),
-                    'memory' => $profile->getMemoryUsage(),
-                    'memory_str' => $this->getDataFormatter()->formatBytes($profile->getMemoryUsage()),
-                    'is_success' => $profile->isSuccess(),
-                    'error_message' => (string) $profile->getError(),
-                    'connection_id' => $connection->getName(),
-                ];
-            }
-        }
-
-        return $profiles;
     }
 
     /**
@@ -189,7 +83,7 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
         return [
             $this->name => [
                 'icon' => 'align-justify',
-                'widget' => 'PhpDebugBar.Widgets.RedisCommandsWidget',
+                'widget' => 'PhpDebugBar.Widgets.PredisCommandsWidget',
                 'map' => $this->name,
                 'default' => '[]'
             ],
@@ -219,51 +113,5 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param Profile $profile
-     * @return string
-     */
-    protected function formatCommand(Profile $profile): string
-    {
-        foreach ($this->commandFormatters as $item) {
-            /** @var CommandFormatterInterface $formatter */
-            $formatter = $item[0];
-
-            if ($formatter->supports($profile)) {
-                return $formatter->format($profile);
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * @param mixed $response
-     * @return string
-     */
-    protected function formatResponse($response): string
-    {
-        foreach ($this->responseFormatters as $item) {
-            /** @var ResponseFormatterInterface $formatter */
-            $formatter = $item[0];
-
-            if ($formatter->supports($response)) {
-                return $formatter->format($response);
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * @param array $formatters
-     */
-    protected function sortFormatters(array &$formatters): void
-    {
-        usort($formatters, function (array $a, array $b) {
-            return $b[1] <=> $a[1];
-        });
     }
 }

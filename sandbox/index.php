@@ -9,8 +9,8 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $redis = new \Predis\Client([
-    'host'   => '127.0.0.1',
-    'port'   => 6379,
+    'host' => '127.0.0.1',
+    'port' => 6379,
 ]);
 
 try {
@@ -24,16 +24,14 @@ try {
 $debugbar = new \DebugBar\DebugBar();
 
 $collector = new \Anper\PredisCollector\PredisCollector();
-$adapter = new \Anper\PredisCollector\PredisAdapter($collector);
-$adapter->addClient($redis);
+$collector->addClient($redis);
 
 $debugbar->addCollector($collector);
 
 $redis->set('foo', 'bar');
 $redis->get('foo');
+$redis->get('foo');
 $redis->del(['foo']);
-$redis->hmset('hash', ['one', 'two', '']);
-
 $debugbar->collect();
 
 $renderer = $debugbar->getJavascriptRenderer();
@@ -63,6 +61,12 @@ HTML;
 
     return true;
 } elseif (\in_array($uri, $files, true)) {
+    if (\preg_match('/\.css$/', $uri)) {
+        \header('Content-Type: text/css');
+    } elseif (\preg_match('/\.js$/', $uri)) {
+        \header('Content-Type: text/javascript');
+    }
+
     echo \file_get_contents($uri);
 
     return true;

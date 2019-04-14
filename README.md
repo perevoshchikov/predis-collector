@@ -7,7 +7,7 @@
 
 [Predis](https://github.com/nrk/predis) collector for [PHP Debugbar](https://github.com/maximebf/php-debugbar).
 
-![Screenshot](https://raw.githubusercontent.com/perevoshchikov/predis-collector/master/screenshot.png)
+![Screenshot](screenshot.png)
 
 ## Install
 
@@ -18,38 +18,15 @@ $ composer require anper/predis-collector
 ## Usage
 
 ``` php
-use Anper\PredisCollector\PredisAdapter;
 use Anper\PredisCollector\PredisCollector;
 use Predis\Client;
 
 $client = new Client(...);
 
 $collector = new PredisCollector();
-
-$adapter = new PredisAdapter($collector);
-$adapter->addClient($client);
+$collector->addClient($client);
 
 $debugbar->addCollector($collector);
-```
-
-## Formatters
-
-* response formatters
-```php
-use Anper\PredisCollector\Format\Respose\ArrayFormatter;
-use Anper\PredisCollector\Format\Respose\StringFormatter;
-use Anper\PredisCollector\Format\Response\StatusFormatter;
-
-$collector->addResponseFormatter(new ArrayFormatter());
-$collector->addResponseFormatter(new StringFormatter());
-$collector->addResponseFormatter(new StatusFormatter());
-```
-
-* command formatters
-```php
-use Anper\PredisCollector\Format\Command\HighlightFormatter;
-
-$collector->addCommandFormatter(new HighlightFormatter());
 ```
 
 ## Test
@@ -57,10 +34,6 @@ $collector->addCommandFormatter(new HighlightFormatter());
 ``` bash
 $ composer test
 ```
-
-## Change log
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 

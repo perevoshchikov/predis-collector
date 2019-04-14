@@ -1,4 +1,4 @@
-div.phpdebugbar-widgets-redis .phpdebugbar-widgets-status {
+div.phpdebugbar-widgets-predis .phpdebugbar-widgets-status {
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
     padding: 6px 6px;
     border-bottom: 1px solid #ddd;
@@ -7,65 +7,29 @@ div.phpdebugbar-widgets-redis .phpdebugbar-widgets-status {
     background: #fafafa;
 }
 
-div.phpdebugbar-widgets-redis li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-error {
-    color: red;
-}
-
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-database,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-duration,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-memory,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-response,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-connection {
+div.phpdebugbar-widgets-predis span.phpdebugbar-widgets-connection {
     float: right;
     margin-left: 8px;
     color: #888;
 }
-div.phpdebugbar-widgets-redis div.phpdebugbar-widgets-status span.phpdebugbar-widgets-database,
-div.phpdebugbar-widgets-redis div.phpdebugbar-widgets-status span.phpdebugbar-widgets-duration,
-div.phpdebugbar-widgets-redis div.phpdebugbar-widgets-status span.phpdebugbar-widgets-memory,
-div.phpdebugbar-widgets-redis div.phpdebugbar-widgets-status span.phpdebugbar-widgets-response,
-div.phpdebugbar-widgets-redis div.phpdebugbar-widgets-status span.phpdebugbar-widgets-connection {
-    color: #555;
-}
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-database:before,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-duration:before,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-memory:before,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-response:before,
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-connection:before {
+
+div.phpdebugbar-widgets-predis span.phpdebugbar-widgets-connection:before {
     font-family: PhpDebugbarFontAwesome;
     margin-right: 4px;
     font-size: 12px;
-}
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-database:before {
-    content: "\f1c0";
-}
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-duration:before {
-    content: "\f017";
-}
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-memory:before {
-    content: "\f085";
-}
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-response:before {
-    content: "\f063";
-}
-div.phpdebugbar-widgets-redis span.phpdebugbar-widgets-connection:before {
     content: "\f233";
 }
 
-div.phpdebugbar-widgets-redis li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-error {
-    display: block;
-    font-weight: bold;
-}
-
-div.phpdebugbar-widgets-redis code {
+div.phpdebugbar-widgets-predis code {
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-wrap: break-word;
 }
-div.phpdebugbar-widgets-redis li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-duplicate {
+
+div.phpdebugbar-widgets-predis li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-duplicate {
     background-color: #edeff0;
 }
 
-div.phpdebugbar-widgets-redis li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-duplicate:hover {
+div.phpdebugbar-widgets-predis li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-duplicate:hover {
     background-color: #ffc;
 }

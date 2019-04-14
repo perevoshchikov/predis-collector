@@ -1,6 +1,34 @@
 (function($) {
-
     var csscls = PhpDebugBar.utils.makecsscls('phpdebugbar-widgets-');
+
+    var NBSP = ' ';   // &nbsp;
+    var THINSP = ' '; // &thinsp;
+
+    if (typeof(hljs) === 'object') {
+        hljs.registerLanguage('redis', function () {
+            // I'm sorry for this hack
+            return {
+                c: [
+                    {
+                        cN: 'number',
+                        b: '\\b\\d+(\\.\\d+)?',
+                    },
+                    {
+                        cN: 'keyword',
+                        b: '[A-Z]+\\b',
+                    },
+                    {
+                        cN: 'deletion',
+                        b: '[' + NBSP + THINSP + ']+',
+                    },
+                    {
+                        cN: 'string',
+                        b: '\\b[\\w\\-\\:\\_]+\\b',
+                    },
+                ]
+            };
+        });
+    }
 
     /**
      * Widget for the displaying redis commands
@@ -8,9 +36,9 @@
      * Options:
      *  - data
      */
-    var RedisCommandsWidget = PhpDebugBar.Widgets.RedisCommandsWidget = PhpDebugBar.Widget.extend({
+    var PredisCommandsWidget = PhpDebugBar.Widgets.PredisCommandsWidget = PhpDebugBar.Widget.extend({
 
-        className: csscls('redis'),
+        className: csscls('predis'),
 
         render: function() {
             this.$status = $('<div />')
@@ -18,44 +46,37 @@
                 .appendTo(this.$el);
 
             this.$list = new PhpDebugBar.Widgets.ListWidget({ itemRenderer: function(li, stmt) {
+                var code = stmt.method;
+
+                for (var i = 0; i < stmt.arguments.length; i++) {
+                    var arg = stmt.arguments[i];
+
+                    if (arg === '') {
+                        code += ' '+ THINSP;
+                    } else if (/^\s+$/.test(arg)) {
+                        code += ' ' + arg.replace(/\s/g, NBSP);
+                    } else {
+                        code += ' ' + arg;
+                    }
+                }
+
                 $('<code />')
-                    .html(stmt.prepared_profile)
+                    .html(PhpDebugBar.Widgets.highlight(code, 'redis'))
                     .appendTo(li);
 
-                if (stmt.duration_str) {
-                    $('<span title="Duration" />')
-                        .addClass(csscls('duration'))
-                        .text(stmt.duration_str)
-                        .appendTo(li);
-                }
-
-                if (stmt.memory_str) {
-                    $('<span title="Memory usage" />')
-                        .addClass(csscls('memory'))
-                        .text(stmt.memory_str)
-                        .appendTo(li);
-                }
-
-                if (typeof(stmt.connection_id) != 'undefined' && stmt.connection_id) {
+                if (typeof(stmt.connection) != 'undefined' && stmt.connection) {
                     $('<span title="Connection" />')
                         .addClass(csscls('connection'))
-                        .text(stmt.connection_id)
+                        .text(stmt.connection)
                         .appendTo(li);
                 }
 
-                if (stmt.prepared_response) {
-                    $('<span title="Response" />')
-                        .addClass(csscls('response'))
-                        .text(stmt.prepared_response)
-                        .appendTo(li);
-                }
+                li
+                    .data('method', stmt.method)
+                    .data('arguments', stmt.arguments)
+                    .data('connecton', stmt.connection);
 
-                if (typeof(stmt.is_success) != 'undefined' && !stmt.is_success) {
-                    li.addClass(csscls('error'));
-                    li.append($('<span />')
-                        .addClass(csscls('error'))
-                        .text(stmt.error_message));
-                }
+                li.trigger('prediscommandswidgetitem');
             }});
 
             this.$list.$el.appendTo(this.$el);
@@ -71,13 +92,9 @@
 
                 // Search for duplicate and failed profiles.
                 for (var map = {}, unique = 0, duplicate = 0, failed = 0, i = 0; i < data.profiles.length; i++) {
-                    var stmt = data.profiles[i].prepared_profile;
+                    var stmt = data.profiles[i].method + data.profiles[i].arguments.join();
                     map[stmt] = map[stmt] || { keys: [] };
                     map[stmt].keys.push(i);
-
-                    if (data.profiles[i].is_success === false) {
-                        failed++;
-                    }
                 }
 
                 // Add classes to all duplicate profiles.
@@ -101,32 +118,12 @@
                     .text(data.nb_profiles + " commands were executed")
                     .appendTo(this.$status);
 
-                if (failed) {
-                    t.append(", " + failed + " of which failed");
-                }
-
                 if (duplicate) {
                     t.append(", " + duplicate + " of which were duplicates");
                     t.append(", " + unique + " unique");
                 }
 
-                if (data.duration_str) {
-                    this.$status
-                        .append(
-                            $('<span title="Accumulated duration" />')
-                                .addClass(csscls('duration'))
-                                .text(data.duration_str)
-                        );
-                }
-
-                if (data.memory_str) {
-                    this.$status
-                        .append(
-                            $('<span title="Memory usage" />')
-                                .addClass(csscls('memory'))
-                                .text(data.memory_str)
-                        );
-                }
+                this.$el.trigger('prediscommandswidgetready');
             });
         }
     });
