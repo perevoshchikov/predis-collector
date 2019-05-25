@@ -18,7 +18,6 @@
     ],
     "require": {
         "php": "~7.1",
-        "anper/predis-command-collector": "^0.1",
         "maximebf/debugbar": "^1.15",
         "predis/predis": "^1.1"
     },

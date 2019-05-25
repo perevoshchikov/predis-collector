@@ -2,9 +2,9 @@
 
 namespace Anper\PredisCollector\Tests;
 
-use Anper\Predis\CommandCollector\CollectorData;
-use Anper\Predis\CommandCollector\CollectorInterface;
 use Anper\PredisCollector\PredisCollector;
+use Anper\PredisCollector\Processor\ProcessorInterface;
+use Anper\PredisCollector\Processor\ProviderInterface;
 use Predis\ClientInterface;
 use Predis\Command\StringSet;
 
@@ -68,15 +68,18 @@ class PredisCollectorTest extends \PHPUnit\Framework\TestCase
     public function testAddClient()
     {
         $client = $this->createMock(ClientInterface::class);
+        $client->expects($this->once())
+            ->method('getConnection')
+            ->willReturn('connection_id');
 
-        $mock = $this->createMock(CollectorInterface::class);
+        $mock = $this->createMock(ProviderInterface::class);
         $mock->expects($this->once())
-            ->method('addClient')
-            ->with($client, 'default');
+            ->method('register')
+            ->with($client);
 
         $collector = new PredisCollector('redis', $mock);
 
-        $collector->addClient($client, 'default');
+        $collector->addClient($client);
     }
 
     public function testCollect()
@@ -85,20 +88,22 @@ class PredisCollectorTest extends \PHPUnit\Framework\TestCase
         $command->setArguments(['foo', 'bar']);
         $clientName = 'default';
 
-        $data = $this->createMock(CollectorData::class);
-        $data->expects($this->once())
+        $processor = $this->createMock(ProcessorInterface::class);
+        $processor->expects($this->once())
             ->method('getCommands')
             ->willReturn([$command]);
-        $data->expects($this->once())
-            ->method('getClientName')
-            ->willReturn($clientName);
 
-        $mock = $this->createMock(CollectorInterface::class);
-        $mock->expects($this->once())
-            ->method('getData')
-            ->willReturn([$data]);
+        $client = $this->createMock(ClientInterface::class);
 
-        $collector = new PredisCollector('redis', $mock);
+        $provider = $this->createMock(ProviderInterface::class);
+        $provider->expects($this->once())
+            ->method('register')
+            ->willReturn($processor)
+            ->with($client);
+
+        $collector = new PredisCollector('redis', $provider);
+
+        $collector->addClient($client, $clientName);
 
         $this->assertEquals($collector->collect(), [
             'nb_profiles' => 1,

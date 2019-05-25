@@ -2,13 +2,14 @@
 
 namespace Anper\PredisCollector;
 
-use Anper\Predis\CommandCollector\Collector;
-use Anper\Predis\CommandCollector\CollectorInterface;
+use Anper\PredisCollector\Processor\ProcessorInterface;
+use Anper\PredisCollector\Processor\ProcessorProvider;
+use Anper\PredisCollector\Processor\ProviderInterface;
 use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
-use Predis\ClientInterface;
 use Predis\Command\CommandInterface;
+use Predis\ClientInterface;
 
 /**
  * Class PredisCollector
@@ -22,28 +23,40 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
     protected $name;
 
     /**
-     * @var CollectorInterface
+     * @var ProviderInterface
      */
-    protected $collector;
+    protected $provider;
+
+    /**
+     * @var ProcessorInterface[]
+     */
+    protected $data = [];
 
     /**
      * @param string $name
-     * @param CollectorInterface|null $collector
+     * @param ProviderInterface|null $provider
      */
-    public function __construct(string $name = 'predis', CollectorInterface $collector = null)
+    public function __construct(string $name = 'predis', ProviderInterface $provider = null)
     {
-        $this->name      = $name;
-        $this->collector = $collector ?? new Collector();
+        $this->name     = $name;
+        $this->provider = $provider ?? new ProcessorProvider();
     }
 
     /**
      * @param ClientInterface $client
      * @param string|null $name
+     *
      * @return PredisCollector
      */
     public function addClient(ClientInterface $client, string $name = null): self
     {
-        $this->collector->addClient($client, $name);
+        $processor = $this->provider->register($client);
+
+        if (empty($name) && ($clientName = (string) $client->getConnection())) {
+            $name = $clientName;
+        }
+
+        $this->data[$name ?? time()] = $processor;
 
         return $this;
     }
@@ -58,15 +71,15 @@ class PredisCollector extends DataCollector implements Renderable, AssetProvider
             'profiles' => []
         ];
 
-        foreach ($this->collector->getData() as $value) {
-            foreach ($value->getCommands() as $command) {
+        foreach ($this->data as $name => $processor) {
+            foreach ($processor->getCommands() as $command) {
                 if ($command instanceof CommandInterface) {
                     $data['nb_profiles']++;
 
                     $data['profiles'][] = [
                         'method' => $command->getId(),
                         'arguments' => $command->getArguments(),
-                        'connection' => $value->getClientName(),
+                        'connection' => $name,
                     ];
                 }
             }
